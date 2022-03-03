@@ -14,6 +14,7 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
     var hasLoad = false
     @IBOutlet weak var reportBarBtnItem: UIBarButtonItem!
     @IBOutlet weak var favorBarBtnItem: UIBarButtonItem!
+    @IBOutlet weak var shareBarBtnItem: UIBarButtonItem!
     let contentLayout = TGLinearLayout(.horz)
     var dataArr: [ImageDataModel] = []
     var leftImgView = ImageScrollView()
@@ -29,6 +30,7 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
             }
         }
     }
+    var currentImgIndex = 0
     
     override func loadView() {
         super.loadView()
@@ -61,6 +63,7 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
 
         reportBarBtnItem.tintColor = .red
         favorBarBtnItem.tintColor = .red
+        shareBarBtnItem.tintColor = .red
         let userDefault = UserDefaults.standard
         page = userDefault.value(forKey: "homePage") as? Int ?? 0
         loadNetworkData()
@@ -167,6 +170,24 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
         }
     }
     
+    // MARK: - 分享图片
+    @IBAction func shareBarAction(_ sender: UIBarButtonItem) {
+        var shareImg: UIImage!
+        switch currentImgIndex {
+        case 0:
+            shareImg = leftImgView.imageView.image
+        case 1:
+            shareImg = centerImgView.imageView.image
+        default:
+            shareImg = rightImgView.imageView.image
+        }
+        let shareText = "抖图，无声的抖音"
+        let activityVC = UIActivityViewController(activityItems: [shareText, shareImg ?? ""], applicationActivities: nil)
+        activityVC.popoverPresentationController?.sourceView = self.view
+        activityVC.popoverPresentationController?.sourceRect = CGRect(origin:self.view.center, size: CGSize(width:1, height: 1))
+        present(activityVC, animated: true, completion: nil)
+    }
+    
     // MARK: - UIScrollViewDelegate
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         // 小于等于3个，不用处理
@@ -177,11 +198,13 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
         // 向前滑到第一个
         if scrollIndex == 0 && contentOffSetX <= screenWidth {
             currentImgModel = leftImgView.imgDataModel
+            currentImgIndex = 0
             return;
         }
         // 向后滑到最后一个
         if scrollIndex == dataArr.count - 1 && contentOffSetX > screenWidth {
             currentImgModel = rightImgView.imgDataModel
+            currentImgIndex = 2
             page = 0
             let userDefault = UserDefaults.standard
             userDefault.setValue(page, forKey: "homePage")
@@ -232,6 +255,7 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
                 }
             }
         }
+        currentImgIndex = 1
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {

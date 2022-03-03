@@ -41,15 +41,23 @@
                                 <action selector="reportBarAction:" destination="mEg-7O-3EC" id="Zwo-ez-jNv"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="保存" image="suit.heart.fill" catalog="system" id="KxT-oe-jmp">
-                            <connections>
-                                <action selector="favorBarAction:" destination="mEg-7O-3EC" id="4ON-FP-dze"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem image="share" id="Hmz-ob-N0b">
+                                <connections>
+                                    <action selector="shareBarAction:" destination="mEg-7O-3EC" id="jLv-t6-Rml"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="保存" image="suit.heart.fill" catalog="system" id="KxT-oe-jmp">
+                                <connections>
+                                    <action selector="favorBarAction:" destination="mEg-7O-3EC" id="4ON-FP-dze"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="favorBarBtnItem" destination="KxT-oe-jmp" id="Rnu-JW-FS8"/>
                         <outlet property="reportBarBtnItem" destination="gAg-If-wjg" id="jDV-It-I0V"/>
+                        <outlet property="shareBarBtnItem" destination="Hmz-ob-N0b" id="vQx-78-5Nr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QK8-ZY-igy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -59,6 +67,7 @@
     </scenes>
     <resources>
         <image name="exclamationmark.triangle" catalog="system" width="128" height="112"/>
+        <image name="share" width="32" height="32"/>
         <image name="suit.heart.fill" catalog="system" width="128" height="109"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
