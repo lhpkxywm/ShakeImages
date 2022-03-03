@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 let screenWidth = UIScreen.main.bounds.width
+let qiNiuFileHost = "http://kokofiles.waityousell.com/"
 
 var Color_Theme: UIColor {
     return UIColor(named: "LightBlue") ?? .systemBlue

@@ -71,13 +71,49 @@ class PublishViewController: BaseProjController, UIImagePickerControllerDelegate
                 imgData = (pickImage?.pngData())!
             }
             let timeStamp = String(Int(Date().timeIntervalSince1970))
-            let imgFile = BmobFile(fileName: "img_" + timeStamp + "." + imgType, withFileData: imgData)!
-            saveImgFile(imgFile: imgFile)
+            let imgName = "img_" + timeStamp
+            self.qiNiuUploadFile(imgName: imgName, imgData: imgData)
+            // let imgFile = BmobFile(fileName: "img_" + timeStamp + "." + imgType, withFileData: imgData)!
+            // saveImgFile(imgFile: imgFile)
         }
     }
     
-    func saveImgFile(imgFile: BmobFile) {
+    func qiNiuUploadFile(imgName: String, imgData: Data) {
         view.hud.showLoading("正在保存，请稍候")
+        let qnConfig = QNConfiguration.build{ (builder) in
+            builder?.useHttps = true
+        }
+        let upManager = QNUploadManager.sharedInstance(with: qnConfig)
+        let option = QNUploadOption { Key, percent in
+            self.view.hud.showLoading("上传进度=\(percent)")
+        }
+        let token = GenToken.make("MR8RPHriYToU4xtQUo-DkQft5yCXJMTjU7hr3OeV", secretKey: "X4IlA-y3kkIrqsOePr4M9ilhcO5Au9TTBDLAAeEC", bucket: "kokofiles") ?? ""
+        upManager?.put(imgData, key: imgName, token: token, complete: { info, key, resp in
+            if resp != nil {
+                self.view.hud.showSuccess("图片保存成功!")
+                let imgFileUrl = qiNiuFileHost + imgName
+                let imgObj = BmobObject(className: "t_image")
+                let bUser = BmobUser.current()
+                if bUser != nil {
+                    imgObj?.setObject(bUser, forKey: "author")
+                    imgObj?.setObject(bUser?.objectId, forKey: "authorId")
+                }
+                imgObj?.setObject(imgFileUrl, forKey: "imageUrl")
+                imgObj?.saveInBackground(resultBlock: { [self] result, error in
+                    if result {
+                        view.hud.showSuccess("图片保存成功!")
+                        pickImage = nil
+                        imgType = ""
+                        imageBtn.setBackgroundImage(UIImage(named: "imgAdd"), for: .normal)
+                    } else {
+                        self.view.hud.showError("图片数据保存失败!")
+                    }
+                })
+            }
+        }, option: option)
+    }
+    
+    func saveImgFile(imgFile: BmobFile) {
         let imgObj = BmobObject(className: "t_image")
         let bUser = BmobUser.current()
         if bUser != nil {
@@ -94,7 +130,7 @@ class PublishViewController: BaseProjController, UIImagePickerControllerDelegate
                         imgType = ""
                         imageBtn.setBackgroundImage(UIImage(named: "imgAdd"), for: .normal)
                     } else {
-                        self.view.hud.showError("图片数据保存失败!")
+                        view.hud.showError("图片数据保存失败!")
                     }
                 })
             } else {

@@ -37,8 +37,6 @@ class ImageScrollView: UIScrollView {
     }
     lazy var imageView : UIImageView = {
         let imgView = UIImageView()
-        // scaleAspectFill, .bottom, .top
-        // imgView.contentMode = .top
         return imgView
     }()
     

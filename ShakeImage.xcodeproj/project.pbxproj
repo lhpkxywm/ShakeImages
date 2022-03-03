@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		10017B343206929A918DCF17 /* libPods-ShakeImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BAADD28991D72849D1682A8 /* libPods-ShakeImage.a */; };
+		9A047ABC27D0819D00AC90C1 /* QiNiuTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A047ABB27D0819D00AC90C1 /* QiNiuTools.swift */; };
+		9A047ABF27D0AE9100AC90C1 /* GenToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A047ABE27D0AE9100AC90C1 /* GenToken.m */; };
 		9A10D7AA264D06E0000A6190 /* AppleLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A10D7A9264D06E0000A6190 /* AppleLoginManager.swift */; };
 		9A363BFA26271B0C00B4AFD5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A363BF926271B0C00B4AFD5 /* AppDelegate.swift */; };
 		9A363BFC26271B0C00B4AFD5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A363BFB26271B0C00B4AFD5 /* SceneDelegate.swift */; };
@@ -22,7 +25,6 @@
 		9A3C6E7C263BE1C600407036 /* MyUploadImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3C6E7B263BE1C600407036 /* MyUploadImageController.swift */; };
 		9A3C6E7E263BE1EC00407036 /* AboutAppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3C6E7D263BE1EC00407036 /* AboutAppController.swift */; };
 		9A3C6E82263BE6B100407036 /* MeItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3C6E81263BE6B100407036 /* MeItemModel.swift */; };
-		9A3C6E84263BF4B100407036 /* BmobSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A3C6E83263BF4B100407036 /* BmobSDK.framework */; };
 		9A3C6E87263BF4D200407036 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A3C6E86263BF4D200407036 /* Foundation.framework */; };
 		9A3C6E89263BF4DE00407036 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A3C6E88263BF4DE00407036 /* CoreLocation.framework */; };
 		9A3C6E8B263BF4E600407036 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A3C6E8A263BF4E600407036 /* Security.framework */; };
@@ -213,6 +215,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		18B597FCB8D9CC644E34908D /* Pods-ShakeImage.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShakeImage.release.xcconfig"; path = "Target Support Files/Pods-ShakeImage/Pods-ShakeImage.release.xcconfig"; sourceTree = "<group>"; };
+		59043986C454942D08197926 /* Pods-ShakeImage.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShakeImage.debug.xcconfig"; path = "Target Support Files/Pods-ShakeImage/Pods-ShakeImage.debug.xcconfig"; sourceTree = "<group>"; };
+		5BAADD28991D72849D1682A8 /* libPods-ShakeImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ShakeImage.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A047ABB27D0819D00AC90C1 /* QiNiuTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiNiuTools.swift; sourceTree = "<group>"; };
+		9A047ABD27D0AE9100AC90C1 /* GenToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenToken.h; sourceTree = "<group>"; };
+		9A047ABE27D0AE9100AC90C1 /* GenToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenToken.m; sourceTree = "<group>"; };
 		9A10D7A8264D0682000A6190 /* ShakeImage.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShakeImage.entitlements; sourceTree = "<group>"; };
 		9A10D7A9264D06E0000A6190 /* AppleLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginManager.swift; sourceTree = "<group>"; };
 		9A363BF626271B0C00B4AFD5 /* ShakeImage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShakeImage.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -235,7 +243,6 @@
 		9A3C6E7B263BE1C600407036 /* MyUploadImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyUploadImageController.swift; sourceTree = "<group>"; };
 		9A3C6E7D263BE1EC00407036 /* AboutAppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutAppController.swift; sourceTree = "<group>"; };
 		9A3C6E81263BE6B100407036 /* MeItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeItemModel.swift; sourceTree = "<group>"; };
-		9A3C6E83263BF4B100407036 /* BmobSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BmobSDK.framework; sourceTree = "<group>"; };
 		9A3C6E86263BF4D200407036 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9A3C6E88263BF4DE00407036 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		9A3C6E8A263BF4E600407036 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -424,7 +431,6 @@
 				9A3C6EA4263BF5F600407036 /* libc++.tbd in Frameworks */,
 				9A3C6E97263BF52B00407036 /* AVFoundation.framework in Frameworks */,
 				9A3C6E9E263BF58300407036 /* libicucore.tbd in Frameworks */,
-				9A3C6E84263BF4B100407036 /* BmobSDK.framework in Frameworks */,
 				9A3C6E91263BF51000407036 /* CFNetwork.framework in Frameworks */,
 				9A3C6E8B263BF4E600407036 /* Security.framework in Frameworks */,
 				9A3C6EA3263BF5E600407036 /* Photos.framework in Frameworks */,
@@ -433,6 +439,7 @@
 				9A3C6E8D263BF4ED00407036 /* CoreGraphics.framework in Frameworks */,
 				9A3C6E87263BF4D200407036 /* Foundation.framework in Frameworks */,
 				9ACD726D2651F1320040706E /* CoreServices.framework in Frameworks */,
+				10017B343206929A918DCF17 /* libPods-ShakeImage.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -453,6 +460,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		70275196B5EAF4A33B7CF8DB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				59043986C454942D08197926 /* Pods-ShakeImage.debug.xcconfig */,
+				18B597FCB8D9CC644E34908D /* Pods-ShakeImage.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		9A363BED26271B0C00B4AFD5 = {
 			isa = PBXGroup;
 			children = (
@@ -461,6 +477,7 @@
 				9A363C1A26271B0D00B4AFD5 /* ShakeImageUITests */,
 				9A363BF726271B0C00B4AFD5 /* Products */,
 				9A3C6E85263BF4D200407036 /* Frameworks */,
+				70275196B5EAF4A33B7CF8DB /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -577,7 +594,6 @@
 		9A363C38262721E200B4AFD5 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
-				9A3C6E83263BF4B100407036 /* BmobSDK.framework */,
 				9AEDFA9D26395682006B0EAE /* HUDKit */,
 				9AEDFA3526395675006B0EAE /* KakaJSON */,
 				9AEDF9B626392717006B0EAE /* KingFisher */,
@@ -590,9 +606,12 @@
 		9A363C39262721E200B4AFD5 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				9A047ABD27D0AE9100AC90C1 /* GenToken.h */,
+				9A047ABE27D0AE9100AC90C1 /* GenToken.m */,
 				9AEDFA3026392C6A006B0EAE /* Extension.swift */,
 				9A3C6EA5263BF6D200407036 /* ShakeImage-Bridging-Header.h */,
 				9A10D7A9264D06E0000A6190 /* AppleLoginManager.swift */,
+				9A047ABB27D0819D00AC90C1 /* QiNiuTools.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -710,6 +729,7 @@
 				9A3C6E8A263BF4E600407036 /* Security.framework */,
 				9A3C6E88263BF4DE00407036 /* CoreLocation.framework */,
 				9A3C6E86263BF4D200407036 /* Foundation.framework */,
+				5BAADD28991D72849D1682A8 /* libPods-ShakeImage.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1063,6 +1083,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9A363C2026271B0D00B4AFD5 /* Build configuration list for PBXNativeTarget "ShakeImage" */;
 			buildPhases = (
+				011A029C8517FD1F20069A07 /* [CP] Check Pods Manifest.lock */,
 				9A363BF226271B0C00B4AFD5 /* Sources */,
 				9A363BF326271B0C00B4AFD5 /* Frameworks */,
 				9A363BF426271B0C00B4AFD5 /* Resources */,
@@ -1187,6 +1208,31 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		011A029C8517FD1F20069A07 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ShakeImage-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		9A363BF226271B0C00B4AFD5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -1236,6 +1282,7 @@
 				9AEDF9A52639072E006B0EAE /* TGPathLayout.swift in Sources */,
 				9AEDFA0D26392717006B0EAE /* ImageDownloader.swift in Sources */,
 				9AEDFAA126395682006B0EAE /* HUD.swift in Sources */,
+				9A047ABF27D0AE9100AC90C1 /* GenToken.m in Sources */,
 				9A3C6E7C263BE1C600407036 /* MyUploadImageController.swift in Sources */,
 				9AEDFA1526392717006B0EAE /* ImageFormat.swift in Sources */,
 				9AEDFA9226395675006B0EAE /* StructDescriptor.swift in Sources */,
@@ -1283,6 +1330,7 @@
 				9A363BFC26271B0C00B4AFD5 /* SceneDelegate.swift in Sources */,
 				9AEDFA8926395675006B0EAE /* ModelType.swift in Sources */,
 				9AEDF9A72639072E006B0EAE /* TGFlowLayout.swift in Sources */,
+				9A047ABC27D0819D00AC90C1 /* QiNiuTools.swift in Sources */,
 				9AEDFA2C26392717006B0EAE /* Result.swift in Sources */,
 				9AEDFA9626395675006B0EAE /* Logger.swift in Sources */,
 				9AEDFA2126392717006B0EAE /* NSTextAttachment+Kingfisher.swift in Sources */,
@@ -1516,6 +1564,7 @@
 		};
 		9A363C2126271B0D00B4AFD5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 59043986C454942D08197926 /* Pods-ShakeImage.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1549,6 +1598,7 @@
 		};
 		9A363C2226271B0D00B4AFD5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 18B597FCB8D9CC644E34908D /* Pods-ShakeImage.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
