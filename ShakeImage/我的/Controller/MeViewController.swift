@@ -33,7 +33,7 @@ class MeViewController: BaseProjController, UITableViewDataSource, UITableViewDe
         super.loadView()
         tableView.tg_top.equal(0)
         tableView.tg_horzMargin(8)
-        tableView.tg_height.equal(dataArr.count * 44)
+        tableView.tg_height.equal(dataArr.count * 45)
         tableView.dataSource = self
         tableView.delegate = self
         frameLayout.addSubview(tableView)

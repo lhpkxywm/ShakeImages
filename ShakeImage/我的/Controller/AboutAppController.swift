@@ -92,8 +92,20 @@ class AboutAppController: BaseProjController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
         navigationItem.title = "关于抖图"
+        
+        let shareBarBtnItem = UIBarButtonItem(image: UIImage(named: "share"), style: .plain, target: self, action: #selector(shareBarBtnItemClick))
+        navigationItem.rightBarButtonItem = shareBarBtnItem
+    }
+    
+    @objc func shareBarBtnItemClick() {
+        let shareText = "抖图——一个无声版的抖音"
+        let shareImage = appIconView.image
+        let shareUrl = URL(string: "https://apps.apple.com/cn/app/id1567730647")
+        let activityVC = UIActivityViewController(activityItems: [shareText, shareImage!, shareUrl!], applicationActivities: nil)
+        activityVC.popoverPresentationController?.sourceView = self.view
+        activityVC.popoverPresentationController?.sourceRect = CGRect(origin:self.view.center, size: CGSize(width:1, height: 1))
+        present(activityVC, animated: true, completion: nil)
     }
     
     @objc func qrLongTapClick(gesture: UILongPressGestureRecognizer) {
