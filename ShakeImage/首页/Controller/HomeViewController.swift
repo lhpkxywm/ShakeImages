@@ -274,7 +274,12 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
             userDefault.synchronize()
             loadNetworkData()
         }
-        currentImgModel = dataArr[scrollIndex]
+        if scrollIndex < dataArr.count {
+            currentImgModel = dataArr[scrollIndex]
+        } else {
+            print("图片加载缓慢!")
+        }
+        
     }
     // MARK: - 屏蔽图片请求
     func requestShield(imgObj: BmobObject, reason: Int) {

@@ -81,13 +81,12 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate, ASAuthorizationC
         if authorization.credential is ASAuthorizationAppleIDCredential {   // 登录
             let credential = authorization.credential as! ASAuthorizationAppleIDCredential
             let userId = credential.user
-            print("user=\(userId)")
             
             guard let identityToken = credential.identityToken else {
                 self.failureComplete?("identityToken为空")
                 return
             }
-            guard let token = String.init(data: identityToken, encoding: .utf8) else {
+            guard String.init(data: identityToken, encoding: .utf8) != nil else {
                 self.failureComplete?("identityToken为空")
                 return
             }
