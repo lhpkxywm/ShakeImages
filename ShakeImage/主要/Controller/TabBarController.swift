@@ -21,7 +21,7 @@ class TabBarController: UITabBarController {
         addChildVC("我的", "tabar_me", "tabar_me_s", meNavVC)
         
         tabBar.backgroundColor = Color_Tab
-        tabBar.unselectedItemTintColor = UIColor(named: "TabItemColor") ?? .label
+        tabBar.unselectedItemTintColor = UIColor(named: "TabNavLabelColor") ?? .label
         tabBar.tintColor = UIColor(named: "LightBlueColor") ?? .systemBlue
     }
     
