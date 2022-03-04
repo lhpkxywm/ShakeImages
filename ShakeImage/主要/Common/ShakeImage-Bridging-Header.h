@@ -3,7 +3,6 @@
 //
 
 #import <BmobSDK/Bmob.h>
-#import <CommonCrypto/CommonCrypto.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>
 #import "QN_GTM_Base64.h"

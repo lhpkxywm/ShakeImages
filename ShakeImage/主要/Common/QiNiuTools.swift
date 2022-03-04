@@ -8,91 +8,72 @@
 import Foundation
 
 class QiNiuTools {
-    let deadline = String(Date().timeIntervalSince1970 + 365 * 24 * 60 * 60)
     let bucket = "kokofiles"
     let accessKey = "MR8RPHriYToU4xtQUo-DkQft5yCXJMTjU7hr3OeV"
     let secretKey = "X4IlA-y3kkIrqsOePr4M9ilhcO5Au9TTBDLAAeEC"
-    
-    static var filePath = String()
-    static var sharedInstance = QiNiuTools()
         
-    init() {
-        
-    }
-    /*
-    func createToken() {
-        var jsonDict: [String: Any] = [:]
-        jsonDict["scope"] = bucket
-        jsonDict["deadline"] = deadline
-        let jsonData = try? JSONSerialization.data(withJSONObject: jsonDict, options: [])
-        let encoded = self.urlSafeBase64Encode(text: jsonData!)
-        let encoded_signed =
-    }
+    static let shared = QiNiuTools()
+    private init() {}
     
-    func urlSafeBase64Encode(text: Data) -> String {
-        var base64 = String(data: QN_GTM_Base64.encode(text), encoding: String.Encoding.utf8)
-        base64 = base64?.replacingOccurrences(of: "+", with: "-")
-        base64 = base64?.replacingOccurrences(of: "/", with: "_")
-        return base64 ?? ""
-    }
-    
-    func hmacsha1(_ key: String, text: String) -> String? {
-        let cKey = key.cString(using: String.Encoding.utf8)
-        let cData = text.cString(using: String.Encoding.utf8)
-        let cHMAC = [Int8](repeating: 0, count: Int(CC_SHA1_DIGEST_LENGTH))
-        CCHmac(kCCHmacAlgSHA1, cKey, strlen(cKey), cData, strlen(cData), cHMAC)
-        let HMAC = Data(bytes: &cHMAC, length: CC_SHA1_DIGEST_LENGTH)
-        let hash = urlSafeBase64Encode(HMAC)
-        
-        return hash
-    }
-    */
-    
-    func token() -> String {
-        return self.createQiniuToken()
-    }
-    
-    func createQiniuToken() -> String {
-        let secretKeyStr = secretKey.utf8CString
-        let policy = self.marshal()
-        let policyData = policy.data(using: String.Encoding.utf8)
-        let encodedPolicy = QN_GTM_Base64.string(byWebSafeEncoding: policyData, padded: true)
-        let encodedPolicyStr = encodedPolicy?.cString(using: String.Encoding.utf8)
-        
-        let digestStr = [Int8](repeating: 0, count: 20)
-        // bzero(digestStr, 0)
-        return ""
-    }
-    
-    func marshal() -> String {
-        var jsonDict: [String: Any] = [:]
-        jsonDict["scope"] = bucket
-        jsonDict["deadline"] = deadline
-        let json = self.jsonStringWithPrettyPrint(prettyPrint: true, dict: jsonDict)
-        return json
-    }
-    
-    func jsonStringWithPrettyPrint(prettyPrint: Bool, dict: [String: Any]) -> String {
+    func jsonStringWithPrettyPrint(prettyPrint: Bool, dict: Dictionary<String, String>) -> String {
         var jsonData: Data? = nil
         do {
             jsonData = try JSONSerialization.data(
                 withJSONObject: dict,
                 options: JSONSerialization.WritingOptions(rawValue: (prettyPrint ? JSONSerialization.WritingOptions.prettyPrinted.rawValue : 0)))
-            return String(data: jsonData!, encoding: .utf8) ?? ""
+            if jsonData != nil {
+                return String(data: jsonData!, encoding: .utf8) ?? ""
+            } else {
+                return ""
+            }
         } catch {
             return ""
         }
     }
     
-    func jsonDictionaryToString(dictionary: [String: Any]) -> String? {
-        let jsonData = try? JSONSerialization.data(withJSONObject: dictionary, options: [])
-        let jsonStr = String(data: jsonData!, encoding: .utf8)
-        return jsonStr
+    func makeShal() -> String {
+        let deadline = Date().timeIntervalSince1970 + 3600
+        let dict = [
+            "scope": bucket,
+            "deadline": String(deadline)
+        ]
+        let json = self.jsonStringWithPrettyPrint(prettyPrint: true, dict: dict)
+        return json
     }
-
-    func jsonStringToDictionary(string: String) -> [String: Any]? {
-        let jsonData = string.data(using: .utf8)
-        let jsonDic = try? JSONSerialization.jsonObject(with: jsonData!, options: []) as? [String: Any]
-        return jsonDic
+    
+    func createQiNiuToken() -> String {
+        let secretKeyStr = secretKey.utf8CString as? UnsafePointer<CChar>
+        let policy = self.makeShal()
+        let policyData = policy.data(using: .utf8)
+        let encodedPolicy = QN_GTM_Base64.string(byWebSafeEncoding: policyData, padded: true)
+        let encodedPolicyStr = encodedPolicy?.cString(using: .utf8)
+        
+        var digestStr = [CUnsignedChar](repeating: 0, count: Int(CC_SHA1_DIGEST_LENGTH))
+        CCHmac(CCHmacAlgorithm(kCCHmacAlgSHA1), secretKeyStr, Int(strlen(secretKeyStr!)), encodedPolicyStr, Int(strlen(encodedPolicyStr!)), &digestStr)
+        let encodedDigest = QN_GTM_Base64.string(byWebSafeEncodingBytes: digestStr, length: UInt(CC_SHA1_DIGEST_LENGTH), padded: true)!
+        let token = accessKey + ":" + encodedDigest + ":" + encodedPolicy!
+        print("QiNiuToken=\(token)")
+        return token
     }
+    /*
+    func hmacsha1WithString(str: String) -> NSData {
+        let cKey  = secretKey.cString(using: String.Encoding.ascii)
+        let cData = str.cString(using: String.Encoding.ascii)
+        
+        var result = [CUnsignedChar](repeating: 0, count: Int(CC_SHA1_DIGEST_LENGTH))
+        CCHmac(CCHmacAlgorithm(kCCHmacAlgSHA1), cKey!, Int(strlen(cKey!)), cData!, Int(strlen(cData!)), &result)
+        let hmacData: NSData = NSData(bytes: result, length: (Int(CC_SHA1_DIGEST_LENGTH)))
+        return hmacData
+    }
+    
+    func createToken(fileName: String) -> String {
+        let oneHourLater = NSDate().timeIntervalSince1970 + 3600
+        let putPolicy: NSDictionary = ["scope": bucket, "deadline": NSNumber(value: UInt64(oneHourLater))]
+        let encodedPutPolicy = QNUrlSafeBase64.encode(putPolicy.dataUsingEncoding(String.Encoding.utf8))
+        let sign = self.hmacsha1WithString(str: encodedPutPolicy!, secretKey: secretKey)
+        let encodedSign = QNUrlSafeBase64.encode(sign as! Data)
+                
+        return accessKey + ":" + encodedSign! + ":" + encodedPutPolicy!
+    }
+    */
 }
