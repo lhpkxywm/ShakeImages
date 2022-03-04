@@ -65,7 +65,7 @@ class MyUploadImageController: BaseProjController, UICollectionViewDataSource, U
         uploadBtn.titleLabel?.font = .systemFont(ofSize: 15)
         uploadBtn.setTitle("点我去上传图片", for: .normal)
         uploadBtn.layer.borderWidth = 1
-        uploadBtn.layer.borderColor = Color_Theme.cgColor
+        uploadBtn.layer.borderColor = UIColor.systemBlue.cgColor
         uploadBtn.layer.cornerRadius = 4
         uploadBtn.layer.masksToBounds = true
         uploadBtn.addTarget(self, action: #selector(uploadBtnClick), for: .touchUpInside)
