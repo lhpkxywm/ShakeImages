@@ -206,10 +206,9 @@ class MeViewController: BaseProjController, UITableViewDataSource, UITableViewDe
             }
         }
         let loginNav = UINavigationController(rootViewController: loginVC)
-        loginNav.navigationBar.barTintColor = Color_Theme
         loginNav.navigationBar.tintColor = .white
         loginNav.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        view.hud.showLoading("登录中")
+        // view.hud.showLoading("登录中")
         present(loginNav, animated: true, completion: nil)
     }
     // MARK: - 苹果ID登录

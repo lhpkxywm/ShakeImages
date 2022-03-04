@@ -12,7 +12,11 @@ let screenWidth = UIScreen.main.bounds.width
 let qiNiuFileHost = "http://kokofiles.waityousell.com/"
 
 var Color_Theme: UIColor {
-    return UIColor(named: "LightBlue") ?? .systemBlue
+    return UIColor(named: "ThemeColor") ?? .systemBlue
+}
+
+var Color_Tab: UIColor {
+    return UIColor(named: "TabColor") ?? .systemBlue
 }
 
 func isIPhoneXSeries() -> Bool {

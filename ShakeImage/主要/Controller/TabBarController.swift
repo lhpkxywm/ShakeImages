@@ -12,7 +12,6 @@ class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
         let homeNavVC = UIStoryboard(name: "Home", bundle: nil).instantiateInitialViewController() as! UINavigationController
         let publishNavVC = UIStoryboard(name: "Publish", bundle: nil).instantiateInitialViewController() as! UINavigationController
         let meNavVC = UIStoryboard(name: "Me", bundle: nil).instantiateInitialViewController() as! UINavigationController
@@ -20,12 +19,14 @@ class TabBarController: UITabBarController {
         addChildVC("首页", "tabar_home", "tabar_home_s", homeNavVC)
         addChildVC("发布", "tabar_add", "tabar_add_s", publishNavVC)
         addChildVC("我的", "tabar_me", "tabar_me_s", meNavVC)
+        
+        tabBar.backgroundColor = Color_Tab
+        tabBar.unselectedItemTintColor = UIColor(named: "TabItemColor") ?? .label
+        tabBar.tintColor = UIColor(named: "LightBlueColor") ?? .systemBlue
     }
     
     func addChildVC(_ title:String, _ image:String, _ selectImg:String, _ navVC:UINavigationController) {
-        
-        navVC.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor:UIColor.lightGray], for: .normal)
-        navVC.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor:Color_Theme], for: .selected)
+        // navVC.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor:UIColor(named: "LightBlueColor")!], for: .selected)
         navVC.tabBarItem.title = title
         
         guard let tabarImg = UIImage(named: image) else {
@@ -42,8 +43,7 @@ class TabBarController: UITabBarController {
     
     func addChildVC(_ title:String, _ image:String, _ selectImg:String, _ vcType:UIViewController.Type) {
         let childVC = UINavigationController(rootViewController: vcType.init())
-        childVC.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor:UIColor.lightGray], for: .normal)
-        childVC.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor:Color_Theme], for: .selected)
+        // childVC.tabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor:UIColor(named: "LightBlueColor")!], for: .selected)
         childVC.tabBarItem.title = title
         
         guard let tabarImg = UIImage(named: image) else {

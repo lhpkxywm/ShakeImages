@@ -38,7 +38,6 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
         mainScrollView.isPagingEnabled = true
         mainScrollView.backgroundColor = UIColor(named: "BackColor")
         mainScrollView.delegate = self
-        mainScrollView.contentInsetAdjustmentBehavior = .never
         view = mainScrollView
         
         contentLayout.tg_width.equal(.wrap)

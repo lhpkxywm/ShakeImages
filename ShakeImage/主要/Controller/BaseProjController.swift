@@ -13,14 +13,18 @@ class BaseProjController: UIViewController {
     
     override func loadView() {
         super.loadView()
-        edgesForExtendedLayout = .bottom
+        edgesForExtendedLayout = UIRectEdge(rawValue:0)
         frameLayout.backgroundColor = UIColor(named: "BackColor")
         view = frameLayout
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.backgroundColor = Color_Theme
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = Color_Theme
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
         navigationController?.navigationBar.titleTextAttributes =
             [NSAttributedString.Key.foregroundColor: UIColor.label]
     }
