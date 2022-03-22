@@ -19,6 +19,11 @@ class PublishViewController: BaseProjController, UIImagePickerControllerDelegate
     
     override func loadView() {
         super.loadView()
+        
+        let contentLayout = TGLinearLayout(.vert)
+        contentLayout.tg_margin(0)
+        frameLayout.addSubview(contentLayout)
+        
         imageBtn.tg_top.equal(20)
         imageBtn.tg_horzMargin(20)
         imageBtn.tg_height.equal(imageBtn.tg_width)
@@ -26,7 +31,17 @@ class PublishViewController: BaseProjController, UIImagePickerControllerDelegate
         imageBtn.layer.cornerRadius = 5
         imageBtn.layer.masksToBounds = true
         imageBtn.addTarget(self, action: #selector(imgBtnClick), for: .touchUpInside)
-        frameLayout.addSubview(imageBtn)
+        contentLayout.addSubview(imageBtn)
+        
+        let label = UILabel()
+        label.tg_top.equal(20)
+        label.tg_horzMargin(20)
+        label.tg_height.equal(.wrap)
+        label.textColor = .label
+        label.font = .systemFont(ofSize: 15)
+        label.numberOfLines = 0
+        label.text = "您上传的所有图片、动图都将进行人工审核，对于违规、不雅以及令人产生不适的图片，将会被系统删除。"
+        contentLayout.addSubview(label)
         
         let saveBtn = UIButton()
         saveBtn.tg_bottom.equal(20)
