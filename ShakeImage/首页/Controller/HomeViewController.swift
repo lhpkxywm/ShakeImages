@@ -193,15 +193,26 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
         if dataArr.count <= 3 {
             return
         }
+        /*
+        if scrollIndex > 3, scrollIndex % 10 == 0 {
+            print("显示广告")
+        }*/
         let contentOffSetX = scrollView.contentOffset.x
+        // print("contentOffSetX=\(contentOffSetX),screenWidth=\(screenWidth),scrollIndex=\(scrollIndex)")
         // 向前滑到第一个
-        if scrollIndex == 0 && contentOffSetX <= screenWidth {
+        if scrollIndex == 0, contentOffSetX <= 0 {
+            print("从第一个开始向前滑，不管")
+            return;
+        }
+        if scrollIndex == 0, contentOffSetX > 0, contentOffSetX <= screenWidth {
+            print("从第一个开始向后滑")
             currentImgModel = leftImgView.imgDataModel
-            currentImgIndex = 0
+            currentImgIndex = 1
             return;
         }
         // 向后滑到最后一个
         if scrollIndex == dataArr.count - 1 && contentOffSetX > screenWidth {
+            print("向后滑到最后一个")
             currentImgModel = rightImgView.imgDataModel
             currentImgIndex = 2
             page = 0
@@ -214,6 +225,7 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
         // 判断是从中间视图从左向右滑(上一个)还是从右向左滑(下一个)
         if contentOffSetX >= screenWidth * 2 {
             // 从右向左滑(往后滑)
+            print("从中间向后滑")
             if scrollIndex == 0 {
                 scrollIndex += 2
                 scrollView.setContentOffset(CGPoint(x: screenWidth, y: 0), animated: false)
@@ -234,26 +246,32 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
             }
         } else if contentOffSetX <= 0 {
             // 从左向右滑(往前滑)
+            print("从中间向前滑")
             if scrollIndex == 1 {
                 leftImgView.imgDataModel = dataArr[scrollIndex - 1]
                 centerImgView.imgDataModel = dataArr[scrollIndex]
                 rightImgView.imgDataModel = dataArr[scrollIndex + 1]
-                scrollIndex -= 1
+                scrollIndex = 0
+                currentImgIndex = 0
+                return;
             } else {
+                /*
                 if scrollIndex == dataArr.count - 1 {
                     scrollIndex -= 2
                 } else {
                     scrollIndex -= 1
-                }
+                }*/
+                scrollIndex -= 1
                 scrollView.setContentOffset(CGPoint(x: screenWidth, y: 0), animated: false)
                 rightImgView.imgDataModel = centerImgView.imgDataModel
                 centerImgView.imgDataModel = leftImgView.imgDataModel
                 
                 if scrollIndex > 0 {
-                    leftImgView.imgDataModel = dataArr.last!
+                    leftImgView.imgDataModel = dataArr[scrollIndex - 1]
                 }
             }
         }
+        // 只要是从中间向两侧滑动，currentImgIndex都赋值为1
         currentImgIndex = 1
     }
     
@@ -263,7 +281,6 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
             scrollIndex = 1
         }
         // 当只剩最后两个的时候，获取新数据
-        print("scrollIndex=\(scrollIndex)")
         if scrollIndex == dataArr.count - 2 {
             // page = scrollIndex / 10 + 1
             page += 1
@@ -278,7 +295,7 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
         } else {
             print("图片加载缓慢!")
         }
-        
+        // print("scrollIndex=\(scrollIndex),imgIndex=\(currentImgIndex),dataArrCount=\(dataArr.count)")
     }
     // MARK: - 屏蔽图片请求
     func requestShield(imgObj: BmobObject, reason: Int) {
