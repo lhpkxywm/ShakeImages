@@ -6,9 +6,14 @@
 //
 
 import Foundation
+import HandyJSON
 
-struct ImageDataModel {
-    var imgUrl = ""
+struct ImageDataModel: HandyJSON {
+    var imageId = 0
+    var imageUrl = ""
+    var imgType = 0
+    var userId = ""
+    var favorIdArr = ""
+    var shieldArr = ""
     var isFavor = false
-    var bmobObj = BmobObject()
 }

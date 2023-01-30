@@ -126,6 +126,7 @@ class UpdatePasswordController: BaseProjController {
             view.hud.showError("两次输入的密码不一致")
             return
         }
+        /*
         let bUser = BmobUser.current()
         bUser?.updateCurrentUserPassword(withOldPassword: oldPasswordTF.text, newPassword: passwordTF.text, block: { result, error in
             if result {
@@ -135,16 +136,6 @@ class UpdatePasswordController: BaseProjController {
                 self.view.hud.showError("密码修改失败!")
             }
         })
+         */
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

@@ -14,16 +14,18 @@ class MeViewController: BaseProjController, UITableViewDataSource, UITableViewDe
     let logoutBtn = UIButton()
     lazy var dataArr: [MeItemModel] = {
         var modelArr = [MeItemModel]()
-        let userPwdModel = MeItemModel(iconImage: "password", title: "修改密码", detail: "", vcName: "UpdatePasswordController")
+        let userPwdModel = MeItemModel(iconImage: "password", title: "重置密码", detail: "", vcName: "ResetPasswordController")
         modelArr.append(userPwdModel)
         let uploadModel = MeItemModel(iconImage: "upload", title: "我上传的", detail: "", vcName: "MyUploadImageController")
         modelArr.append(uploadModel)
         let favorModel = MeItemModel(iconImage: "favor", title: "我喜爱的", detail: "", vcName: "MyFavorController")
         modelArr.append(favorModel)
-        let filterModel = MeItemModel(iconImage: "blackList", title: "我的黑名单", detail: "", vcName: "MyFilterUserController")
-        modelArr.append(filterModel)
+        // let filterModel = MeItemModel(iconImage: "blackList", title: "我的黑名单", detail: "", vcName: "MyFilterUserController")
+        // modelArr.append(filterModel)
         let clearShieldModel = MeItemModel(iconImage: "favor", title: "清除厌恶记录", detail: "", vcName: "")
         modelArr.append(clearShieldModel)
+        let registerOutModel = MeItemModel(iconImage: "regout", title: "注销账户", detail: "", vcName: "")
+        modelArr.append(registerOutModel)
         let aboutModel = MeItemModel(iconImage: "aboutApp", title: "关于我们", detail: "", vcName: "AboutAppController")
         modelArr.append(aboutModel)
         return modelArr
@@ -88,7 +90,7 @@ class MeViewController: BaseProjController, UITableViewDataSource, UITableViewDe
         loginBtn.setTitle("账号密码登录", for: .normal)
         loginBtn.addTarget(self, action: #selector(loginBtnClick), for: .touchUpInside)
         unLoginLayout.addSubview(loginBtn)
-        
+        /*
         let appleBtn = UIButton()
         appleBtn.tg_top.equal(20)
         appleBtn.tg_horzMargin(40)
@@ -103,7 +105,7 @@ class MeViewController: BaseProjController, UITableViewDataSource, UITableViewDe
         appleBtn.setTitle("使用AppleID登录", for: .normal)
         appleBtn.addTarget(self, action: #selector(appleLoginClick), for: .touchUpInside)
         unLoginLayout.addSubview(appleBtn)
-        
+        */
         let policyBtn = UIButton()
         policyBtn.tg_top.equal(40)
         policyBtn.tg_horzMargin(0)
@@ -118,12 +120,11 @@ class MeViewController: BaseProjController, UITableViewDataSource, UITableViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if BmobUser.current() != nil {
+        if UserInfoModel.shared.account.count > 0 {
             tableView.isHidden = false
             logoutBtn.isHidden = false
             unLoginLayout.isHidden = true
@@ -159,18 +160,11 @@ class MeViewController: BaseProjController, UITableViewDataSource, UITableViewDe
     }
     // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        /*
-        let clickModel = dataArr[indexPath.row]
-        let vcName = clickModel.vcName
-        let vcClass = NSClassFromString(vcName) as! BaseProjController.Type
-        let vc = vcClass.init()
-        navigationController?.pushViewController(vc, animated: true)
-         */
         switch indexPath.row {
         case 0:
-            let updatePwdVC = UpdatePasswordController()
-            updatePwdVC.hidesBottomBarWhenPushed = true
-            navigationController?.pushViewController(updatePwdVC, animated: true)
+            let resetPwdVC = ResetPasswordController()
+            resetPwdVC.hidesBottomBarWhenPushed = true
+            navigationController?.pushViewController(resetPwdVC, animated: true)
         case 1:
             let uploadImgVC = MyUploadImageController()
             uploadImgVC.hidesBottomBarWhenPushed = true
@@ -179,12 +173,16 @@ class MeViewController: BaseProjController, UITableViewDataSource, UITableViewDe
             let myFavorVC = MyFavorController()
             myFavorVC.hidesBottomBarWhenPushed = true
             navigationController?.pushViewController(myFavorVC, animated: true)
+            /*
         case 3:
             let myFilterVC = MyFilterUserController()
             myFilterVC.hidesBottomBarWhenPushed = true
             navigationController?.pushViewController(myFilterVC, animated: true)
-        case 4:
+             */
+        case 3:
             requestClearShieldRecord()
+        case 4:
+            registerOutAction()
         default:
             let aboutAppVC = AboutAppController()
             aboutAppVC.hidesBottomBarWhenPushed = true
@@ -198,11 +196,13 @@ class MeViewController: BaseProjController, UITableViewDataSource, UITableViewDe
         loginVC.resultClosure = { [self]
             (result) in
             if result {
-                view.hud.showSuccess("登陆成功!")
+                view.hud.showSuccess("登录成功!")
                 unLoginLayout.isHidden = true
                 tableView.isHidden = false
                 logoutBtn.isHidden = false
                 tableView.reloadData()
+            } else {
+                view.hud.showError("登录失败!")
             }
         }
         let loginNav = UINavigationController(rootViewController: loginVC)
@@ -211,12 +211,12 @@ class MeViewController: BaseProjController, UITableViewDataSource, UITableViewDe
         // view.hud.showLoading("登录中")
         present(loginNav, animated: true, completion: nil)
     }
-    // MARK: - 苹果ID登录
+    /* MARK: - 苹果ID登录
     @objc func appleLoginClick() {
         AppleLoginManager.shared.show { [self] userId in
             let userQuery = BmobUser.query()
             userQuery?.whereKey("appleIdInfo", equalTo: userId)
-            userQuery?.findObjectsInBackground({ userArr,error in
+            userQuery?.findObjectsInBackground({ [self] userArr,error in
                 if userArr?.count ?? 0 > 0 {
                     let queryUser = userArr?.first as! BmobUser
                     queryUser.password = "appuser"
@@ -227,7 +227,7 @@ class MeViewController: BaseProjController, UITableViewDataSource, UITableViewDe
                     registUser.username = "user_" + userId
                     registUser.password = "appuser"
                     registUser.setObject(userId, forKey: "appleIdInfo")
-                    registUser.signUpInBackground { result, error in
+                    registUser.signUpInBackground { [self] result, error in
                         if result {
                             self.view.hud.showSuccess("注册成功!")
                             // 注册后直接登录
@@ -243,25 +243,13 @@ class MeViewController: BaseProjController, UITableViewDataSource, UITableViewDe
             self.view.hud.showError(errStr)
         }
     }
-    // MARK: - bmob登录
-    func loginWith(bUser: BmobUser) {
-        BmobUser.loginWithUsername(inBackground: bUser.username, password: bUser.password) { [self] bUser, error in
-            if bUser != nil {
-                view.hud.showSuccess("登录成功!")
-                unLoginLayout.isHidden = true
-                tableView.isHidden = false
-                logoutBtn.isHidden = false
-                tableView.reloadData()
-            } else {
-                view.hud.showError("登录失败!")
-            }
-        }
-    }
+    */
     // MARK: - 清除厌恶记录
     func requestClearShieldRecord() {
-        guard let currentUser = BmobUser.current() else { return }
         let alertController = UIAlertController(title: "操作提示", message: "是否清除厌恶记录?", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "确定", style: .default) { _ in
+            self.view.hud.showSuccess("清除成功!")
+            /*
             let imgQuery: BmobQuery = BmobQuery(className: "t_image")
             // 屏蔽图片厌恶id中包含当前用户id的数据
             imgQuery.whereKey("shieldArr", containedIn: [currentUser.objectId!])
@@ -281,7 +269,7 @@ class MeViewController: BaseProjController, UITableViewDataSource, UITableViewDe
                         self.view.hud.showSuccess("清除成功!")
                     }
                 }
-            }
+            }*/
         }
         alertController.addAction(okAction)
         let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
@@ -289,9 +277,56 @@ class MeViewController: BaseProjController, UITableViewDataSource, UITableViewDe
         present(alertController, animated: true, completion: nil)
     }
     
+    // MARK: - 注销账户
+    @objc func registerOutAction() {
+        let alertVC = UIAlertController(title: "注销警告⚠️", message: "请谨慎操作，注销后无法恢复", preferredStyle: .alert)
+        alertVC.addTextField { pwdTF in
+            pwdTF.isSecureTextEntry = true
+            pwdTF.placeholder = "请输入密码"
+        }
+        let okAction = UIAlertAction(title: "注销", style: .destructive) { [self] action in
+            if let password = alertVC.textFields?.first?.text {
+                var params = [String: Any]()
+                params["key"] = appPublicKey
+                let jsonDict = [
+                    "account": UserInfoModel.shared.account,
+                    "password": password,
+                    "timestamp": Int(Date().timeIntervalSince1970)
+                ]
+                let aesJsonStr = AesTool.encryptAes(jsonDict: jsonDict, aesKey: appPrivateKey)
+                params["data"] = aesJsonStr
+                let signature = (appPublicKey + aesJsonStr + appPrivateKey).md5()
+                params["signature"] = signature
+                NetworkProvider.request(NetworkAPI.regout(params: params)) { [self] result in
+                    if case .success(let response) = result {
+                        let resultDict = dealResponseData(respData: response.data, aesKey: appPrivateKey)
+                        if let resultCode = resultDict["code"] as? Int, resultCode == 1 {
+                            view.hud.showSuccess("注销账户成功!")
+                            unLoginLayout.isHidden = false
+                            tableView.isHidden = true
+                            logoutBtn.isHidden = true
+                        } else {
+                            let msg = resultDict["msg"] as? String
+                            view.hud.showError(msg)
+                        }
+                    }
+                }
+            } else {
+                view.hud.showError("密码格式错误❌")
+            }
+            
+            
+        }
+        alertVC.addAction(okAction)
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel)
+        alertVC.addAction(cancelAction)
+        present(alertVC, animated: true)
+    }
+    
     // MARK: - 退出登录
     @objc func logoutBtnClick() {
-        BmobUser.logout()
+        let userInfoModel = UserInfoModel()
+        UserInfoModel.shared = userInfoModel
         view.hud.delay = 2
         view.hud.showSuccess("退出登录成功！")
         unLoginLayout.isHidden = false

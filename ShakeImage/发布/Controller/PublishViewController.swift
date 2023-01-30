@@ -100,8 +100,6 @@ class PublishViewController: BaseProjController, UIImagePickerControllerDelegate
             let timeStamp = String(Int(Date().timeIntervalSince1970))
             let imgName = "img_" + timeStamp
             self.qiNiuUploadFile(imgName: imgName, imgData: imgData)
-            // let imgFile = BmobFile(fileName: "img_" + timeStamp + "." + imgType, withFileData: imgData)!
-            // saveImgFile(imgFile: imgFile)
         }
     }
     
@@ -119,6 +117,34 @@ class PublishViewController: BaseProjController, UIImagePickerControllerDelegate
             if resp != nil {
                 self.view.hud.showSuccess("图片保存成功!")
                 let imgFileUrl = qiNiuFileHost + imgName
+                var params = [String: Any]()
+                params["key"] = hostPublicAesKey
+                let jsonDict = [
+                    "table": "t_image",
+                    "column": "`imageUrl`,`imgType`",
+                    "value": "('\(imgFileUrl)','-1')",
+                    "timestamp": Int(Date().timeIntervalSince1970)
+                ]
+                let aesJsonStr = AesTool.encryptAes(jsonDict: jsonDict, aesKey: hostSecretAesKey)
+                params["data"] = aesJsonStr
+                let signature = (hostPublicAesKey + aesJsonStr + hostSecretAesKey).md5()
+                params["signature"] = signature
+                NetworkProvider.request(NetworkAPI.publishImage(params: params)) { [self] result in
+                    if case .success(let response) = result {
+                        // 解密数据
+                        let resultDict = dealResponseData(respData: response.data, aesKey: hostSecretAesKey)
+                        if let resultCode = resultDict["code"] as? Int, resultCode == 1 {
+                            view.hud.showSuccess("成功")
+                        } else {
+                            let msg = resultDict["msg"] as? String
+                            view.hud.showError(msg)
+                        }
+                    } else {
+                        print("failure")
+                    }
+                }
+
+                /*
                 let imgObj = BmobObject(className: "t_image")
                 let bUser = BmobUser.current()
                 if bUser != nil {
@@ -136,34 +162,9 @@ class PublishViewController: BaseProjController, UIImagePickerControllerDelegate
                         self.view.hud.showError("图片数据保存失败!")
                     }
                 })
+                 */
             }
         }, option: option)
-    }
-    
-    func saveImgFile(imgFile: BmobFile) {
-        let imgObj = BmobObject(className: "t_image")
-        let bUser = BmobUser.current()
-        if bUser != nil {
-            imgObj?.setObject(bUser, forKey: "author")
-            imgObj?.setObject(bUser?.objectId, forKey: "authorId")
-        }
-        imgFile.saveInBackground { result, error in
-            if result {
-                imgObj?.setObject(imgFile.url, forKey: "imageUrl")
-                imgObj?.saveInBackground(resultBlock: { [self] result, error in
-                    if result {
-                        view.hud.showSuccess("图片保存成功!")
-                        pickImage = nil
-                        imgType = ""
-                        imageBtn.setBackgroundImage(UIImage(named: "imgAdd"), for: .normal)
-                    } else {
-                        view.hud.showError("图片数据保存失败!")
-                    }
-                })
-            } else {
-                self.view.hud.showError("图片文件上传失败!")
-            }
-        }
     }
     
     // MARK: - UIImagePickerControllerDelegate

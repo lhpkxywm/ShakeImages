@@ -11,7 +11,7 @@ class LoginViewController: BaseProjController {
     
     var isPresent = false
     let contentLayout = TGLinearLayout(.vert)
-    let userNameTF = UITextField()
+    let mobilePhoneTF = UITextField()
     let passwordTF = UITextField()
     let loginBtn = UIButton()
     let updatePwdBtn = UIButton()
@@ -70,13 +70,13 @@ class LoginViewController: BaseProjController {
         mobileIconView.tg_height.equal(16)
         userNameLayout.addSubview(mobileIconView)
         
-        userNameTF.tg_left.equal(8)
-        userNameTF.tg_vertMargin(0)
-        userNameTF.tg_width.equal(TGWeight(1))
-        userNameTF.font = .systemFont(ofSize: 15)
-        userNameTF.placeholder = "请输入用户名"
-        userNameTF.clearButtonMode = .whileEditing
-        userNameLayout.addSubview(userNameTF)
+        mobilePhoneTF.tg_left.equal(8)
+        mobilePhoneTF.tg_vertMargin(0)
+        mobilePhoneTF.tg_width.equal(TGWeight(1))
+        mobilePhoneTF.font = .systemFont(ofSize: 15)
+        mobilePhoneTF.placeholder = "请输入手机号"
+        mobilePhoneTF.clearButtonMode = .whileEditing
+        userNameLayout.addSubview(mobilePhoneTF)
     }
     
     func createPasswordLayout() {
@@ -135,10 +135,10 @@ class LoginViewController: BaseProjController {
     }
     
     @objc func loginBtnClick() {
-        let userName = userNameTF.text
-        let password = passwordTF.text
+        let account = mobilePhoneTF.text ?? ""
+        let password = passwordTF.text ?? ""
         view.hud.delay = 2
-        if userName == "" {
+        if account == "" {
             view.hud.showError("用户名不能为空")
             return
         }
@@ -147,6 +147,42 @@ class LoginViewController: BaseProjController {
             return
         }
         view.hud.showLoading("登录中")
+        
+        var params = [String: Any]()
+        params["key"] = appPublicKey
+        let jsonDict = [
+            "account": account,
+            "password": password,
+            "timestamp": Int(Date().timeIntervalSince1970)
+        ] as [String : Any]
+        let aesJsonStr = AesTool.encryptAes(jsonDict: jsonDict, aesKey: appPrivateKey)
+        params["data"] = aesJsonStr
+        let signature = (appPublicKey + aesJsonStr + appPrivateKey).md5()
+        params["signature"] = signature
+        NetworkProvider.request(NetworkAPI.login(params: params)) { [self] result in
+            if case .success(let response) = result {
+                let resultDict = dealResponseData(respData: response.data, aesKey: appPrivateKey)
+                if let resultCode = resultDict["code"] as? Int, resultCode == 1 {
+                    let strData = try? JSONSerialization.data(withJSONObject: resultDict, options: [])
+                    let jsonStr = String(data: strData!, encoding: String.Encoding.utf8)
+                    UserInfoModel.shared = UserInfoModel.deserialize(from: jsonStr, designatedPath: "data.user_info")!
+                    if self.isPresent {
+                        self.dismiss(animated: true) {
+                            self.resultClosure?(true)
+                        }
+                    } else {
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                } else {
+                    let msg = resultDict["msg"] as? String
+                    view.hud.showError(msg)
+                }
+            } else {
+                view.hud.showError("登录失败")
+            }
+        }
+        
+        /*
         BmobUser.loginWithUsername(inBackground: userName, password: password) { bUser, error in
             if bUser != nil {
                 self.view.hud.dismiss()
@@ -161,6 +197,7 @@ class LoginViewController: BaseProjController {
                 self.view.hud.showError("登录失败!")
             }
         }
+         */
     }
     
     @objc func updatePwdBtnClick() {

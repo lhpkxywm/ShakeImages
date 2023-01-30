@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6952F41D2C90B90EA485048D /* libPods-ShakeImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BAADD28991D72849D1682A8 /* libPods-ShakeImage.a */; };
 		9A047ABC27D0819D00AC90C1 /* QiNiuTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A047ABB27D0819D00AC90C1 /* QiNiuTools.swift */; };
 		9A047ABF27D0AE9100AC90C1 /* GenToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A047ABE27D0AE9100AC90C1 /* GenToken.m */; };
 		9A10D7AA264D06E0000A6190 /* AppleLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A10D7A9264D06E0000A6190 /* AppleLoginManager.swift */; };
@@ -38,6 +39,10 @@
 		9A3C6E9F263BF58900407036 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A3C6E9D263BF56500407036 /* libsqlite3.tbd */; };
 		9A3C6EA3263BF5E600407036 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A3C6EA1263BF5B200407036 /* Photos.framework */; };
 		9A3C6EA4263BF5F600407036 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A3C6EA0263BF59100407036 /* libc++.tbd */; };
+		9A604B352977C6850064F625 /* NetworkTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A604B342977C6850064F625 /* NetworkTool.swift */; };
+		9A604B372977D77A0064F625 /* AesTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A604B362977D77A0064F625 /* AesTool.swift */; };
+		9A61F6C1297A738800809183 /* ResetPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A61F6C0297A738800809183 /* ResetPasswordController.swift */; };
+		9A61F6C3297A7D7E00809183 /* UserInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A61F6C2297A7D7E00809183 /* UserInfoModel.swift */; };
 		9A6567C32653EF1D00054239 /* MyFilterUserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6567C22653EF1D00054239 /* MyFilterUserController.swift */; };
 		9A9A6FB2264651E8002C875A /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9A6FB1264651E8002C875A /* WebViewController.swift */; };
 		9ACD726D2651F1320040706E /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ACD726C2651F1320040706E /* CoreServices.framework */; };
@@ -258,6 +263,10 @@
 		9A3C6EA0263BF59100407036 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		9A3C6EA1263BF5B200407036 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		9A3C6EA5263BF6D200407036 /* ShakeImage-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ShakeImage-Bridging-Header.h"; sourceTree = "<group>"; };
+		9A604B342977C6850064F625 /* NetworkTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTool.swift; sourceTree = "<group>"; };
+		9A604B362977D77A0064F625 /* AesTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AesTool.swift; sourceTree = "<group>"; };
+		9A61F6C0297A738800809183 /* ResetPasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordController.swift; sourceTree = "<group>"; };
+		9A61F6C2297A7D7E00809183 /* UserInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoModel.swift; sourceTree = "<group>"; };
 		9A6567C22653EF1D00054239 /* MyFilterUserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFilterUserController.swift; sourceTree = "<group>"; };
 		9A9A6FB1264651E8002C875A /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		9ACD726C2651F1320040706E /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
@@ -438,6 +447,7 @@
 				9A3C6E8D263BF4ED00407036 /* CoreGraphics.framework in Frameworks */,
 				9A3C6E87263BF4D200407036 /* Foundation.framework in Frameworks */,
 				9ACD726D2651F1320040706E /* CoreServices.framework in Frameworks */,
+				6952F41D2C90B90EA485048D /* libPods-ShakeImage.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -610,6 +620,8 @@
 				9A3C6EA5263BF6D200407036 /* ShakeImage-Bridging-Header.h */,
 				9A10D7A9264D06E0000A6190 /* AppleLoginManager.swift */,
 				9A047ABB27D0819D00AC90C1 /* QiNiuTools.swift */,
+				9A604B342977C6850064F625 /* NetworkTool.swift */,
+				9A604B362977D77A0064F625 /* AesTool.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -617,6 +629,7 @@
 		9A363C3A262721E200B4AFD5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				9A61F6C2297A7D7E00809183 /* UserInfoModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -646,6 +659,7 @@
 				9AEDF967263903DF006B0EAE /* MeViewController.swift */,
 				9A3C6E75263BE18500407036 /* LoginViewController.swift */,
 				9A3C6E77263BE19400407036 /* RegistViewController.swift */,
+				9A61F6C0297A738800809183 /* ResetPasswordController.swift */,
 				9A3C6E79263BE1AF00407036 /* UpdatePasswordController.swift */,
 				9A3C6E7B263BE1C600407036 /* MyUploadImageController.swift */,
 				9AF1F8D92643D706006EF2A6 /* MyFavorController.swift */,
@@ -1312,6 +1326,7 @@
 				9AEDF9FC26392717006B0EAE /* CacheSerializer.swift in Sources */,
 				9AEDF9FE26392717006B0EAE /* Kingfisher.swift in Sources */,
 				9A363BFA26271B0C00B4AFD5 /* AppDelegate.swift in Sources */,
+				9A604B352977C6850064F625 /* NetworkTool.swift in Sources */,
 				9AEDFA2D26392717006B0EAE /* SizeExtensions.swift in Sources */,
 				9AEDFA2926392717006B0EAE /* CallbackQueue.swift in Sources */,
 				9AEDFA2226392717006B0EAE /* Indicator.swift in Sources */,
@@ -1343,8 +1358,10 @@
 				9AEDFA0326392717006B0EAE /* ImageDataProvider.swift in Sources */,
 				9AEDF9AA2639072E006B0EAE /* TGBaseLayout.swift in Sources */,
 				9AEDF9F826392717006B0EAE /* Storage.swift in Sources */,
+				9A604B372977D77A0064F625 /* AesTool.swift in Sources */,
 				9AEDF9622639034E006B0EAE /* PublishNavController.swift in Sources */,
 				9AEDFA2326392717006B0EAE /* AnimatedImageView.swift in Sources */,
+				9A61F6C3297A7D7E00809183 /* UserInfoModel.swift in Sources */,
 				9AEDFA8F26395675006B0EAE /* Descriptor.swift in Sources */,
 				9A3C41E4264B787700CC13CB /* MyUploadImgCell.swift in Sources */,
 				9AEDFA1B26392717006B0EAE /* GIFAnimatedImage.swift in Sources */,
@@ -1393,6 +1410,7 @@
 				9AEDF95A26390103006B0EAE /* HomeViewController.swift in Sources */,
 				9AEDFA0026392717006B0EAE /* KF.swift in Sources */,
 				9AEDFA7226395675006B0EAE /* NSObject+KJ.swift in Sources */,
+				9A61F6C1297A738800809183 /* ResetPasswordController.swift in Sources */,
 				9AEDFA1726392717006B0EAE /* ImageTransition.swift in Sources */,
 				9AEDFA8226395675006B0EAE /* FunctionType.swift in Sources */,
 				9AEDF9F926392717006B0EAE /* ImageCache.swift in Sources */,
@@ -1495,7 +1513,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1550,7 +1568,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1583,7 +1601,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lhp.ShakeImage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = ShakeImgDevProfile;
@@ -1617,7 +1635,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lhp.ShakeImage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = ShakeImgDisProfile;

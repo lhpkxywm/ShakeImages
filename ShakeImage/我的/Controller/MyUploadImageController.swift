@@ -84,25 +84,56 @@ class MyUploadImageController: BaseProjController, UICollectionViewDataSource, U
     
     // MARK: - 请求数据
     func loadNetworkData() {
-        let currentUser = BmobUser.current()
-        let imgQuery: BmobQuery = BmobQuery(className: "t_image")
-        imgQuery.limit = 10
-        imgQuery.skip = 10 * page
-        imgQuery.whereKey("author", containedIn: [currentUser?.objectId ?? ""])
-        imgQuery.findObjectsInBackground { [self] resultArr, error in
-            for i in 0..<resultArr!.count {
-                let queryObj = resultArr![i] as! BmobObject
-                let imgUrl = queryObj.object(forKey: "imageUrl") as! String
-                let imgModel = ImageDataModel(imgUrl: imgUrl, isFavor: false)
-                dataArr.append(imgModel)
-            }
-            if dataArr.count > 0 {
-                collectionView.isHidden = false
-                emptyLayout.isHidden = true
-                collectionView.reloadData()
-            } else {
-                collectionView.isHidden = true
-                emptyLayout.isHidden = false
+        let currentUserId = UserInfoModel.shared.account
+        var params = [String: Any]()
+        params["key"] = hostPublicAesKey
+        let jsonDict = [
+            "table": "t_image",
+            "column": "*",
+            "where": "userId='\(currentUserId)'",
+            "sort": "desc LIMIT \(page*10),10",            // 排序（asc为升序a-z，desc为降序z-a）
+            "sort_column": "imageId",
+            "timestamp": Int(Date().timeIntervalSince1970)
+        ] as [String : Any]
+        let aesJsonStr = AesTool.encryptAes(jsonDict: jsonDict, aesKey: hostSecretAesKey)
+        params["data"] = aesJsonStr
+        let signature = (hostPublicAesKey + aesJsonStr + hostSecretAesKey).md5()
+        params["signature"] = signature
+        
+        NetworkProvider.request(NetworkAPI.select(params: params)) { [self] result in
+            if case .success(let response) = result {
+                let resultDict = dealResponseData(respData: response.data, aesKey: hostSecretAesKey)
+                if let resultCode = resultDict["code"] as? Int, resultCode == 1 {
+                    let strData = try? JSONSerialization.data(withJSONObject: resultDict, options: [])
+                    let jsonStr = String(data: strData!, encoding: String.Encoding.utf8)
+                    let resultImgArr = [ImageDataModel].deserialize(from: jsonStr, designatedPath: "data.data")!
+                    let currentUserId = UserInfoModel.shared.account
+                    
+                    for resultImg in resultImgArr {
+                        if var imgDataModel = resultImg {
+                            // 收藏该图片的用户id
+                            var imgFavorIdArr = [String]()
+                            if imgDataModel.favorIdArr.count > 0 {
+                                imgFavorIdArr = imgDataModel.favorIdArr.components(separatedBy: ",")
+                            }
+                            if currentUserId.count > 0, imgFavorIdArr.contains(currentUserId) {
+                                imgDataModel.isFavor = true
+                            }
+                            dataArr.append(imgDataModel)
+                        }
+                    }
+                    if dataArr.count > 0 {
+                        collectionView.isHidden = false
+                        emptyLayout.isHidden = true
+                        collectionView.reloadData()
+                    } else {
+                        collectionView.isHidden = true
+                        emptyLayout.isHidden = false
+                    }
+                } else {
+                    let msg = resultDict["msg"] as? String
+                    view.hud.showError(msg)
+                }
             }
         }
     }
@@ -119,7 +150,7 @@ class MyUploadImageController: BaseProjController, UICollectionViewDataSource, U
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cellID = "myUploadImgCell"
         let myUploadImgCell = collectionView.dequeueReusableCell(withReuseIdentifier: cellID, for: indexPath) as? MyUploadImgCell
-        myUploadImgCell?.imgUrl = dataArr[indexPath.row].imgUrl
+        myUploadImgCell?.imgUrl = dataArr[indexPath.row].imageUrl
         return myUploadImgCell!
     }
     

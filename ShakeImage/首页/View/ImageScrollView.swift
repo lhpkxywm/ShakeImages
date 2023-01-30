@@ -14,7 +14,7 @@ class ImageScrollView: UIScrollView {
     var imgDataModel = ImageDataModel() {
         didSet {
             imageView.kf.indicatorType = .activity
-            let imgURL = URL(string: imgDataModel.imgUrl)
+            let imgURL = URL(string: imgDataModel.imageUrl)
             imageView.kf.setImage(with: imgURL, placeholder: nil, options: nil) { [self] result in
                 switch result {
                 case .success(let imgResult):

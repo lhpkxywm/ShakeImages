@@ -7,18 +7,17 @@
 
 import UIKit
 
-class MyFilterUserController: BaseProjController, UITableViewDataSource, UITableViewDelegate {
+class MyFilterUserController: BaseProjController/*, UITableViewDataSource, UITableViewDelegate*/ {
     
     let tableView = UITableView()
-    var filterUserArr = [BmobUser]()
     let emptyLayout = TGLinearLayout(.vert)
     
     override func loadView() {
         super.loadView()
         tableView.tg_margin(0)
         tableView.tableFooterView = UIView(frame: .zero)
-        tableView.dataSource = self
-        tableView.delegate = self
+        // tableView.dataSource = self
+        // tableView.delegate = self
         frameLayout.addSubview(tableView)
         
         emptyLayout.tg_top.equal(screenWidth/3)
@@ -51,6 +50,7 @@ class MyFilterUserController: BaseProjController, UITableViewDataSource, UITable
     }
     
     func loadNetworkData() {
+        /*
         let userQuery = BmobUser.query()
         // 黑名单用户id数组
         let filterIdArr = BmobUser.current().object(forKey: "filterIdArr") as? [String] ?? []
@@ -67,8 +67,9 @@ class MyFilterUserController: BaseProjController, UITableViewDataSource, UITable
                 emptyLayout.isHidden = false
             }
         })
+         */
     }
-    
+    /*
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filterUserArr.count
     }
@@ -110,15 +111,6 @@ class MyFilterUserController: BaseProjController, UITableViewDataSource, UITable
     }
     func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
         "删除"
-    }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
     }
     */
 

@@ -71,63 +71,79 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
     
     // MARK: - 请求数据
     func loadNetworkData() {
+        var params = [String: Any]()
+        params["key"] = hostPublicAesKey
+        let jsonDict = [
+            "table": "t_image",
+            "column": "*",
+            "where": "1",
+            "sort": "desc LIMIT \(page*10),10",            // 排序（asc为升序a-z，desc为降序z-a）
+            "sort_column": "imageId",
+            "timestamp": Int(Date().timeIntervalSince1970)
+        ] as [String : Any]
+        let aesJsonStr = AesTool.encryptAes(jsonDict: jsonDict, aesKey: hostSecretAesKey)
+        params["data"] = aesJsonStr
+        let signature = (hostPublicAesKey + aesJsonStr + hostSecretAesKey).md5()
+        params["signature"] = signature
         
-        let imgQuery: BmobQuery = BmobQuery(className: "t_image")
-        imgQuery.limit = 10
-        imgQuery.skip = 10 * page
-        if let currentUser = BmobUser.current() {
-            // 当前用户黑名单数组
-            let filterIdArr = currentUser.object(forKey: "filterIdArr") as? [String] ?? []
-            // 屏蔽黑名单用户图片
-            imgQuery.whereKey("author", notContainedIn: filterIdArr)
-            // 屏蔽图片厌恶id中包含当前用户id的数据
-            imgQuery.whereKey("shieldArr", notContainedIn: [currentUser.objectId!])
-        }
-        imgQuery.findObjectsInBackground { [self] resultArr, error in
-            for i in 0..<resultArr!.count {
-                let queryObj = resultArr![i] as! BmobObject
-                let imgUrl = queryObj.object(forKey: "imageUrl") as! String
-                var imgModel = ImageDataModel(imgUrl: imgUrl, isFavor: false, bmobObj: queryObj)
-                if let userObjId = BmobUser.current()?.objectId {
-                    let objIdArr: [String] = queryObj.object(forKey: "favorIdArr") as? [String] ?? []
-                    if objIdArr.contains(userObjId) {
-                        imgModel.isFavor = true
-                    } else {
-                        imgModel.isFavor = false
+        NetworkProvider.request(NetworkAPI.select(params: params)) { [self] result in
+            if case .success(let response) = result {
+                let resultDict = dealResponseData(respData: response.data, aesKey: hostSecretAesKey)
+                if let resultCode = resultDict["code"] as? Int, resultCode == 1 {
+                    let strData = try? JSONSerialization.data(withJSONObject: resultDict, options: [])
+                    let jsonStr = String(data: strData!, encoding: String.Encoding.utf8)
+                    let resultImgArr = [ImageDataModel].deserialize(from: jsonStr, designatedPath: "data.data")!
+                    let currentUserId = UserInfoModel.shared.account
+                    
+                    for resultImg in resultImgArr {
+                        if var imgDataModel = resultImg {
+                            // 收藏该图片的用户id
+                            var imgFavorIdArr = [String]()
+                            if imgDataModel.favorIdArr.count > 0 {
+                                imgFavorIdArr = imgDataModel.favorIdArr.components(separatedBy: ",")
+                            }
+                            if currentUserId.count > 0, imgFavorIdArr.contains(currentUserId) {
+                                imgDataModel.isFavor = true
+                            }
+                            dataArr.append(imgDataModel)
+                            if hasLoad == false, dataArr.count > 3 {
+                                leftImgView.imgDataModel = dataArr.first!
+                                centerImgView.imgDataModel = dataArr[1]
+                                rightImgView.imgDataModel = dataArr[2]
+                                currentImgModel = dataArr.first
+                                hasLoad = true
+                            }
+                        }
                     }
+                } else {
+                    let msg = resultDict["msg"] as? String
+                    view.hud.showError(msg)
                 }
-                dataArr.append(imgModel)
-            }
-            if hasLoad == false, dataArr.count > 3 {
-                leftImgView.imgDataModel = dataArr.first!
-                centerImgView.imgDataModel = dataArr[1]
-                rightImgView.imgDataModel = dataArr[2]
-                currentImgModel = dataArr.first
-                hasLoad = true
             }
         }
     }
     @IBAction func reportBarAction(_ sender: UIBarButtonItem) {
-        if BmobUser.current() != nil {
-            guard let currentModel = currentImgModel else { return }
+        if UserInfoModel.shared.account.count > 0 {
+            guard var currentModel = currentImgModel else { return }
             let alertController = UIAlertController(title: "操作提示", message: "请选择图片令您厌恶的理由", preferredStyle: .actionSheet)
             let noFunnyAction = UIAlertAction(title: "不感兴趣🙁", style: .default) { _ in
-                // self.
-                self.requestShield(imgObj: currentModel.bmobObj, reason: 1)
+                self.requestShield(imgModel: &currentModel, reason: 1)
             }
             alertController.addAction(noFunnyAction)
             let sexAction = UIAlertAction(title: "色情低俗😍", style: .default) { _ in
-                self.requestShield(imgObj: currentModel.bmobObj, reason: 2)
+                self.requestShield(imgModel: &currentModel, reason: 2)
             }
             alertController.addAction(sexAction)
             let scarySickAction = UIAlertAction(title: "恐怖恶心🤮", style: .default) { _ in
-                self.requestShield(imgObj: currentModel.bmobObj, reason: 3)
+                self.requestShield(imgModel: &currentModel, reason: 3)
             }
             alertController.addAction(scarySickAction)
+            /*
             let userAction = UIAlertAction(title: "屏蔽该用户👦🏻", style: .default) { _ in
-                self.requestShield(imgObj: currentModel.bmobObj, reason: 4)
+                self.requestShield(imgModel: &currentModel, reason: 4)
             }
             alertController.addAction(userAction)
+             */
             let cancelAction = UIAlertAction(title: "取消", style: .cancel) { _ in
                 
             }
@@ -151,12 +167,12 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
     
     @IBAction func favorBarAction(_ sender: UIBarButtonItem) {
         view.hud.delay = 2
-        if BmobUser.current() != nil {
-            guard let currentModel = currentImgModel else { return }
+        if UserInfoModel.shared.account.count > 0 {
+            guard var currentModel = currentImgModel else { return }
             if currentModel.isFavor == true {
-                requestFavor(imgObj: currentModel.bmobObj, status: false)
+                requestFavor(imgModel: &currentModel, status: false)
             } else {
-                requestFavor(imgObj: currentModel.bmobObj, status: true)
+                requestFavor(imgModel: &currentModel, status: true)
             }
         } else {
             view.hud.showInfo("请先登录")
@@ -298,37 +314,61 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
         // print("scrollIndex=\(scrollIndex),imgIndex=\(currentImgIndex),dataArrCount=\(dataArr.count)")
     }
     // MARK: - 屏蔽图片请求
-    func requestShield(imgObj: BmobObject, reason: Int) {
+    func requestShield(imgModel: inout ImageDataModel, reason: Int) {
         // 获取当前登录用户
-        guard let shieldUser = BmobUser.current() else { return }
-        view.hud.delay = 3
-        if reason < 4 {
+        let currentUserId = UserInfoModel.shared.account
+        if currentUserId.count > 0 {
+            view.hud.delay = 3
             // 获取厌恶该图片的用户id数组
-            var shieldArr: [String] = imgObj.object(forKey: "shieldArr") as? [String] ?? []
+            var shieldArr = [String]()
+            if imgModel.shieldArr.count > 0 {
+                shieldArr = imgModel.shieldArr.components(separatedBy: ",")
+            } else {
+                shieldArr = []
+            }
             // 如果厌恶该图片的用户id数组中包含当前用户的id
-            if shieldArr.contains(shieldUser.objectId) {
+            if shieldArr.contains(currentUserId) {
                 print("查询数据异常，查询出了厌恶的图片")
             } else {
-                shieldArr.append(shieldUser.objectId)
+                shieldArr.append(currentUserId)
             }
-            // 保存文件数据
-            imgObj.setObject(shieldArr, forKey: "shieldArr")
-            imgObj.updateInBackground { [self] result, error in
-                if result {
-                    switch reason {
-                    case 1:
-                        view.hud.showInfo("下次启动后您将不会看到此图片")
-                    case 2:
-                        view.hud.showInfo("下次启动后您将不会看到类似内容")
-                    case 3:
-                        view.hud.showInfo("下次启动后您将不会看到类似内容")
-                    default:
-                        break
+            imgModel.shieldArr = shieldArr.joined(separator: ",")
+            
+            var params = [String: Any]()
+            params["key"] = hostPublicAesKey
+            let jsonDict = [
+                "table": "t_image",
+                "set": "shieldArr=\(imgModel.shieldArr)",
+                "where": "imageId=\(imgModel.imageId)",
+                "timestamp": Int(Date().timeIntervalSince1970)
+            ] as [String : Any]
+            let aesJsonStr = AesTool.encryptAes(jsonDict: jsonDict, aesKey: hostSecretAesKey)
+            params["data"] = aesJsonStr
+            let signature = (hostPublicAesKey + aesJsonStr + hostSecretAesKey).md5()
+            params["signature"] = signature
+            NetworkProvider.request(NetworkAPI.update(params: params)) { [self] result in
+                if case .success(let response) = result {
+                    let resultDict = dealResponseData(respData: response.data, aesKey: hostSecretAesKey)
+                    if let resultCode = resultDict["code"] as? Int, resultCode == 1 {
+                        switch reason {
+                        case 1:
+                            view.hud.showInfo("下次启动后您将不会看到此图片")
+                        case 2:
+                            view.hud.showInfo("下次启动后您将不会看到类似内容")
+                        case 3:
+                            view.hud.showInfo("下次启动后您将不会看到类似内容")
+                        default:
+                            break
+                        }
+                    } else {
+                        view.hud.showError("请求失败!")
                     }
-                } else {
-                    view.hud.showError("请求失败!")
                 }
             }
+        }
+        /*
+        if reason < 4 {
+            
         } else {
             // 将图片作者加入黑名单
             let authorId: String = imgObj.object(forKey: "authorId") as? String ?? ""
@@ -348,38 +388,64 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
                 })
             }
         }
+         */
     }
     // MARK: - 收藏图片请求
-    func requestFavor(imgObj: BmobObject, status: Bool) {
-        view.hud.delay = 2
-        var favorIdArr: [String] = imgObj.object(forKey: "favorIdArr") as? [String] ?? []
-        if status == true {
-            if let userObjId = BmobUser.current().objectId {
-                favorIdArr.append(userObjId)
-            }
-        } else {
-            if let userObjId = BmobUser.current().objectId {
-                favorIdArr.removeAll{
-                    $0 == userObjId
-                }
-            }
-        }
-        imgObj.setObject(favorIdArr, forKey: "favorIdArr")
-        imgObj.updateInBackground { [self] result, error in
-            if result {
-                if status == true {
-                    view.hud.showSuccess("收藏成功!")
-                    currentImgModel?.isFavor = true
-                    dataArr[scrollIndex].isFavor = true
-                    favorBarBtnItem.image = UIImage(systemName: "suit.heart.fill")
-                } else {
-                    view.hud.showSuccess("已取消收藏!")
-                    currentImgModel?.isFavor = false
-                    dataArr[scrollIndex].isFavor = false
-                    favorBarBtnItem.image = UIImage(systemName: "suit.heart")
-                }
+    func requestFavor(imgModel: inout ImageDataModel, status: Bool) {
+        // 获取当前登录用户
+        let currentUserId = UserInfoModel.shared.account
+        if currentUserId.count > 0 {
+            view.hud.delay = 3
+            // 获取收藏该图片的用户id数组
+            var favorIdArr = [String]()
+            if imgModel.favorIdArr.count > 0 {
+                favorIdArr = imgModel.favorIdArr.components(separatedBy: ",")
             } else {
-                view.hud.showError("请求失败!")
+                favorIdArr = []
+            }
+            if status == true {
+                favorIdArr.append(currentUserId)
+            } else {
+                favorIdArr.removeAll{
+                    $0 == currentUserId
+                }
+            }
+            if favorIdArr.count > 1 {
+                imgModel.favorIdArr = favorIdArr.joined(separator: ",")
+            } else {
+                imgModel.favorIdArr = currentUserId
+            }
+            var params = [String: Any]()
+            params["key"] = hostPublicAesKey
+            let jsonDict = [
+                "table": "t_image",
+                "set": "favorIdArr='\(imgModel.favorIdArr)'",
+                "where": "imageId='\(imgModel.imageId)'",
+                "timestamp": Int(Date().timeIntervalSince1970)
+            ] as [String : Any]
+            let aesJsonStr = AesTool.encryptAes(jsonDict: jsonDict, aesKey: hostSecretAesKey)
+            params["data"] = aesJsonStr
+            let signature = (hostPublicAesKey + aesJsonStr + hostSecretAesKey).md5()
+            params["signature"] = signature
+            NetworkProvider.request(NetworkAPI.update(params: params)) { [self] result in
+                if case .success(let response) = result {
+                    let resultDict = dealResponseData(respData: response.data, aesKey: hostSecretAesKey)
+                    if let resultCode = resultDict["code"] as? Int, resultCode == 1 {
+                        if status == true {
+                            view.hud.showSuccess("收藏成功!")
+                            currentImgModel?.isFavor = true
+                            dataArr[scrollIndex].isFavor = true
+                            favorBarBtnItem.image = UIImage(systemName: "suit.heart.fill")
+                        } else {
+                            view.hud.showSuccess("已取消收藏!")
+                            currentImgModel?.isFavor = false
+                            dataArr[scrollIndex].isFavor = false
+                            favorBarBtnItem.image = UIImage(systemName: "suit.heart")
+                        }
+                    } else {
+                        view.hud.showError("请求失败!")
+                    }
+                }
             }
         }
     }

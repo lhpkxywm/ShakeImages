@@ -13,8 +13,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         IQKeyboardManager.shared.enable = true
-        Bmob.resetDomain("http://doutusdk.waityousell.com")
-        Bmob.register(withAppKey: "98045b1272a6bac8851c24f14f930d76")
         return true
     }
 
