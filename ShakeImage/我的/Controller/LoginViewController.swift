@@ -166,6 +166,7 @@ class LoginViewController: BaseProjController {
                     let strData = try? JSONSerialization.data(withJSONObject: resultDict, options: [])
                     let jsonStr = String(data: strData!, encoding: String.Encoding.utf8)
                     UserInfoModel.shared = UserInfoModel.deserialize(from: jsonStr, designatedPath: "data.user_info")!
+                    DataFileManager.saveUserData(filePath: UserInfoModel.filePath)
                     if self.isPresent {
                         self.dismiss(animated: true) {
                             self.resultClosure?(true)

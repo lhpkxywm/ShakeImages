@@ -119,12 +119,22 @@ class PublishViewController: BaseProjController, UIImagePickerControllerDelegate
                 let imgFileUrl = qiNiuFileHost + imgName
                 var params = [String: Any]()
                 params["key"] = hostPublicAesKey
-                let jsonDict = [
-                    "table": "t_image",
-                    "column": "`imageUrl`,`imgType`",
-                    "value": "('\(imgFileUrl)','-1')",
-                    "timestamp": Int(Date().timeIntervalSince1970)
-                ]
+                var jsonDict = [String: Any]()
+                if UserInfoModel.shared.account.count > 0 {
+                    jsonDict = [
+                        "table": "t_image",
+                        "column": "`imageUrl`,`imgType`, `userId`",
+                        "value": "('\(imgFileUrl)','-1','\(UserInfoModel.shared.account)')",
+                        "timestamp": Int(Date().timeIntervalSince1970)
+                    ]
+                } else {
+                    jsonDict = [
+                        "table": "t_image",
+                        "column": "`imageUrl`,`imgType`",
+                        "value": "('\(imgFileUrl)','-1')",
+                        "timestamp": Int(Date().timeIntervalSince1970)
+                    ]
+                }
                 let aesJsonStr = AesTool.encryptAes(jsonDict: jsonDict, aesKey: hostSecretAesKey)
                 params["data"] = aesJsonStr
                 let signature = (hostPublicAesKey + aesJsonStr + hostSecretAesKey).md5()
@@ -143,26 +153,6 @@ class PublishViewController: BaseProjController, UIImagePickerControllerDelegate
                         print("failure")
                     }
                 }
-
-                /*
-                let imgObj = BmobObject(className: "t_image")
-                let bUser = BmobUser.current()
-                if bUser != nil {
-                    imgObj?.setObject(bUser, forKey: "author")
-                    imgObj?.setObject(bUser?.objectId, forKey: "authorId")
-                }
-                imgObj?.setObject(imgFileUrl, forKey: "imageUrl")
-                imgObj?.saveInBackground(resultBlock: { [self] result, error in
-                    if result {
-                        view.hud.showSuccess("图片保存成功!")
-                        pickImage = nil
-                        imgType = ""
-                        imageBtn.setBackgroundImage(UIImage(named: "imgAdd"), for: .normal)
-                    } else {
-                        self.view.hud.showError("图片数据保存失败!")
-                    }
-                })
-                 */
             }
         }, option: option)
     }

@@ -327,6 +327,7 @@ class MeViewController: BaseProjController, UITableViewDataSource, UITableViewDe
     @objc func logoutBtnClick() {
         let userInfoModel = UserInfoModel()
         UserInfoModel.shared = userInfoModel
+        DataFileManager.saveUserData(filePath: UserInfoModel.filePath)
         view.hud.delay = 2
         view.hud.showSuccess("退出登录成功！")
         unLoginLayout.isHidden = false

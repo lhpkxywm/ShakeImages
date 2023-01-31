@@ -45,6 +45,7 @@
 		9A61F6C3297A7D7E00809183 /* UserInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A61F6C2297A7D7E00809183 /* UserInfoModel.swift */; };
 		9A6567C32653EF1D00054239 /* MyFilterUserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6567C22653EF1D00054239 /* MyFilterUserController.swift */; };
 		9A9A6FB2264651E8002C875A /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A9A6FB1264651E8002C875A /* WebViewController.swift */; };
+		9AA004802987D5BB006948B9 /* DataFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA0047F2987D5BB006948B9 /* DataFileManager.swift */; };
 		9ACD726D2651F1320040706E /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ACD726C2651F1320040706E /* CoreServices.framework */; };
 		9AEDF9542638F335006B0EAE /* BaseProjController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEDF9532638F335006B0EAE /* BaseProjController.swift */; };
 		9AEDF9562638F35B006B0EAE /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEDF9552638F35B006B0EAE /* TabBarController.swift */; };
@@ -269,6 +270,7 @@
 		9A61F6C2297A7D7E00809183 /* UserInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoModel.swift; sourceTree = "<group>"; };
 		9A6567C22653EF1D00054239 /* MyFilterUserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFilterUserController.swift; sourceTree = "<group>"; };
 		9A9A6FB1264651E8002C875A /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		9AA0047F2987D5BB006948B9 /* DataFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFileManager.swift; sourceTree = "<group>"; };
 		9ACD726C2651F1320040706E /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		9AEDF9532638F335006B0EAE /* BaseProjController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseProjController.swift; sourceTree = "<group>"; };
 		9AEDF9552638F35B006B0EAE /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
@@ -630,6 +632,7 @@
 			isa = PBXGroup;
 			children = (
 				9A61F6C2297A7D7E00809183 /* UserInfoModel.swift */,
+				9AA0047F2987D5BB006948B9 /* DataFileManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1350,6 +1353,7 @@
 				9AEDFA2526392717006B0EAE /* ImageBinder.swift in Sources */,
 				9AEDFA6D26395675006B0EAE /* Pointer+KJ.swift in Sources */,
 				9AEDF9A12639072E006B0EAE /* IQUITextFieldView+Additions.swift in Sources */,
+				9AA004802987D5BB006948B9 /* DataFileManager.swift in Sources */,
 				9AEDFA7626395675006B0EAE /* Property.swift in Sources */,
 				9AEDFA8426395675006B0EAE /* ProtocolType.swift in Sources */,
 				9AEDFA2E26392717006B0EAE /* Box.swift in Sources */,
