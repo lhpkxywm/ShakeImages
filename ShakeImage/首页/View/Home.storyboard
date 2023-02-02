@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="R4w-gT-igb">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="R4w-gT-igb">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -14,7 +14,7 @@
             <objects>
                 <navigationController storyboardIdentifier="HomeNavController" title="首页" id="R4w-gT-igb" customClass="HomeNavController" customModule="ShakeImage" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="hA4-0P-5sW">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -36,27 +36,13 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" title="首页" id="n9J-W7-ICt">
-                        <barButtonItem key="leftBarButtonItem" title="举报" image="exclamationmark.triangle" catalog="system" id="gAg-If-wjg">
+                        <barButtonItem key="rightBarButtonItem" image="share" id="Hmz-ob-N0b">
                             <connections>
-                                <action selector="reportBarAction:" destination="mEg-7O-3EC" id="Zwo-ez-jNv"/>
+                                <action selector="shareBarAction:" destination="mEg-7O-3EC" id="jLv-t6-Rml"/>
                             </connections>
                         </barButtonItem>
-                        <rightBarButtonItems>
-                            <barButtonItem image="share" id="Hmz-ob-N0b">
-                                <connections>
-                                    <action selector="shareBarAction:" destination="mEg-7O-3EC" id="jLv-t6-Rml"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="保存" image="suit.heart.fill" catalog="system" id="KxT-oe-jmp">
-                                <connections>
-                                    <action selector="favorBarAction:" destination="mEg-7O-3EC" id="4ON-FP-dze"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
-                        <outlet property="favorBarBtnItem" destination="KxT-oe-jmp" id="Rnu-JW-FS8"/>
-                        <outlet property="reportBarBtnItem" destination="gAg-If-wjg" id="jDV-It-I0V"/>
                         <outlet property="shareBarBtnItem" destination="Hmz-ob-N0b" id="vQx-78-5Nr"/>
                     </connections>
                 </viewController>
@@ -66,9 +52,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="exclamationmark.triangle" catalog="system" width="128" height="112"/>
         <image name="share" width="32" height="32"/>
-        <image name="suit.heart.fill" catalog="system" width="128" height="109"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

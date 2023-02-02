@@ -12,21 +12,23 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
     var scrollIndex = 0
     var page = 0
     var hasLoad = false
-    @IBOutlet weak var reportBarBtnItem: UIBarButtonItem!
-    @IBOutlet weak var favorBarBtnItem: UIBarButtonItem!
     @IBOutlet weak var shareBarBtnItem: UIBarButtonItem!
     let contentLayout = TGLinearLayout(.horz)
     var dataArr: [ImageDataModel] = []
     var leftImgView = ImageScrollView()
     var centerImgView = ImageScrollView()
     var rightImgView = ImageScrollView()
+    let menuLayout = TGRelativeLayout()
+    let saveBtn = UIButton()
+    let favorBtn = UIButton()
+    let dislikeBtn = UIButton()
     var currentImgModel: ImageDataModel? {
         didSet {
             guard let imgModel = currentImgModel else { return }
             if imgModel.isFavor {
-                favorBarBtnItem.image = UIImage(systemName: "suit.heart.fill")
+                favorBtn.setBackgroundImage(UIImage(named: "favor_s"), for: .normal)
             } else {
-                favorBarBtnItem.image = UIImage(systemName: "suit.heart")
+                favorBtn.setBackgroundImage(UIImage(named: "favor_n"), for: .normal)
             }
         }
     }
@@ -38,7 +40,8 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
         mainScrollView.isPagingEnabled = true
         mainScrollView.backgroundColor = UIColor(named: "BackColor")
         mainScrollView.delegate = self
-        view = mainScrollView
+        mainScrollView.tg_margin(0)
+        frameLayout.addSubview(mainScrollView)
         
         contentLayout.tg_width.equal(.wrap)
         contentLayout.tg_vertMargin(0)
@@ -46,6 +49,51 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
         mainScrollView.addSubview(contentLayout)
         
         configScrollView()
+        
+        menuLayout.tg_right.equal(16)
+        menuLayout.tg_bottom.equal(40)
+        menuLayout.tg_width.equal(48)
+        menuLayout.tg_height.equal(40)
+        menuLayout.backgroundColor = UIColor(named: "Back")
+        menuLayout.tg_padding = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+        frameLayout.addSubview(menuLayout)
+        
+        // 保存，收藏，厌恶，转发
+        saveBtn.tg_left.equal(0)
+        saveBtn.tg_centerY.equal(0)
+        saveBtn.tg_width.equal(32)
+        saveBtn.tg_height.equal(32)
+        saveBtn.setBackgroundImage(UIImage(named: "save"), for: .normal)
+        saveBtn.addTarget(self, action: #selector(saveBtnClick), for: .touchUpInside)
+        menuLayout.addSubview(saveBtn)
+        
+        favorBtn.tg_left.equal(saveBtn.tg_right).offset(8)
+        favorBtn.tg_centerY.equal(0)
+        favorBtn.tg_width.equal(32)
+        favorBtn.tg_height.equal(32)
+        favorBtn.addTarget(self, action: #selector(favorBtnClick), for: .touchUpInside)
+        menuLayout.addSubview(favorBtn)
+        
+        dislikeBtn.tg_left.equal(favorBtn.tg_right).offset(8)
+        dislikeBtn.tg_centerY.equal(0)
+        dislikeBtn.tg_width.equal(32)
+        dislikeBtn.tg_height.equal(32)
+        dislikeBtn.setBackgroundImage(UIImage(named: "dislike"), for: .normal)
+        dislikeBtn.addTarget(self, action: #selector(dislikeBtnClick), for: .touchUpInside)
+        menuLayout.addSubview(dislikeBtn)
+        
+        saveBtn.isHidden = true
+        favorBtn.isHidden = true
+        dislikeBtn.isHidden = true
+        
+        let menuBtn = UIButton()
+        menuBtn.tg_left.equal(dislikeBtn.tg_right).offset(8)
+        menuBtn.tg_centerY.equal(0)
+        menuBtn.tg_width.equal(32)
+        menuBtn.tg_height.equal(32)
+        menuBtn.setBackgroundImage(UIImage(named: "menu"), for: .normal)
+        menuBtn.addTarget(self, action: #selector(menuBtnClick), for: .touchUpInside)
+        menuLayout.addSubview(menuBtn)
     }
     
     func configScrollView() {
@@ -59,9 +107,6 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        reportBarBtnItem.tintColor = .red
-        favorBarBtnItem.tintColor = .red
         shareBarBtnItem.tintColor = .red
         let userDefault = UserDefaults.standard
         page = userDefault.value(forKey: "homePage") as? Int ?? 0
@@ -76,7 +121,7 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
         let jsonDict = [
             "table": "t_image",
             "column": "*",
-            "where": "1",
+            "where": "imgType>=0",
             "sort": "desc LIMIT \(page*10),10",            // 排序（asc为升序a-z，desc为降序z-a）
             "sort_column": "imageId",
             "timestamp": Int(Date().timeIntervalSince1970)
@@ -97,15 +142,34 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
                     
                     for resultImg in resultImgArr {
                         if var imgDataModel = resultImg {
-                            // 收藏该图片的用户id
-                            var imgFavorIdArr = [String]()
-                            if imgDataModel.favorIdArr.count > 0 {
-                                imgFavorIdArr = imgDataModel.favorIdArr.components(separatedBy: ",")
+                            var imgDislike = false
+                            if currentUserId.count > 0 {
+                                // 厌恶该图片的用户id
+                                var dislikeIdArr = [String]()
+                                if imgDataModel.shieldArr.count > 0 {
+                                    // 字符串转成厌恶数组
+                                    dislikeIdArr = imgDataModel.shieldArr.components(separatedBy: ",")
+                                }
+                                if dislikeIdArr.contains(currentUserId) {
+                                    imgDislike = true
+                                }
+                                // 用户并不厌恶此图片，再判断是否收藏该图片
+                                if imgDislike == false {
+                                    // 收藏该图片的用户id
+                                    var imgFavorIdArr = [String]()
+                                    if imgDataModel.favorIdArr.count > 0 {
+                                        // 字符串转成收藏数组
+                                        imgFavorIdArr = imgDataModel.favorIdArr.components(separatedBy: ",")
+                                    }
+                                    // 收藏数组中包含当前登录用户id
+                                    if imgFavorIdArr.contains(currentUserId) {
+                                        imgDataModel.isFavor = true
+                                    }
+                                }
                             }
-                            if currentUserId.count > 0, imgFavorIdArr.contains(currentUserId) {
-                                imgDataModel.isFavor = true
+                            if imgDislike == false {
+                                dataArr.append(imgDataModel)
                             }
-                            dataArr.append(imgDataModel)
                             if hasLoad == false, dataArr.count > 3 {
                                 leftImgView.imgDataModel = dataArr.first!
                                 centerImgView.imgDataModel = dataArr[1]
@@ -122,7 +186,55 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
             }
         }
     }
-    @IBAction func reportBarAction(_ sender: UIBarButtonItem) {
+    
+    @objc func menuBtnClick(clickBtn: UIButton) {
+        clickBtn.isSelected = !clickBtn.isSelected
+        saveBtn.isHidden = !clickBtn.isSelected
+        favorBtn.isHidden = !clickBtn.isSelected
+        dislikeBtn.isHidden = !clickBtn.isSelected
+        if clickBtn.isSelected {
+            // 展开
+            menuLayout.tg_width.equal(.wrap)
+            menuLayout.layer.borderWidth = 2
+            menuLayout.layer.borderColor = UIColor(named: "DarkBlueColor")?.cgColor
+            menuLayout.layer.cornerRadius = 8
+            menuLayout.layer.masksToBounds = true
+        } else {
+            // 隐藏
+            menuLayout.tg_width.equal(48)
+            menuLayout.layer.borderWidth = 0
+            menuLayout.layer.masksToBounds = true
+        }
+    }
+    
+    @objc func saveBtnClick() {
+        // 看广告
+        if let saveImage = centerImgView.imageView.image {
+            UIImageWriteToSavedPhotosAlbum(saveImage, self, #selector(imageSavedToPhotosAlbum(image:didFinishSabingWithError:contentInfo:)), nil)
+        }
+    }
+    
+    @objc func favorBtnClick() {
+        view.hud.delay = 2
+        if UserInfoModel.shared.account.count > 0 {
+            guard var currentModel = currentImgModel else { return }
+            if currentModel.isFavor == true {
+                requestFavor(imgModel: &currentModel, status: false)
+            } else {
+                requestFavor(imgModel: &currentModel, status: true)
+            }
+        } else {
+            view.hud.showInfo("请先登录")
+            let loginVC = LoginViewController(isPresent: true)
+            let loginNav = UINavigationController(rootViewController: loginVC)
+            loginNav.navigationBar.barTintColor = Color_Theme
+            loginNav.navigationBar.tintColor = .white
+            loginNav.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+            present(loginNav, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func dislikeBtnClick() {
         if UserInfoModel.shared.account.count > 0 {
             guard var currentModel = currentImgModel else { return }
             let alertController = UIAlertController(title: "操作提示", message: "请选择图片令您厌恶的理由", preferredStyle: .actionSheet)
@@ -155,26 +267,6 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
             }
         } else {
             view.hud.delay = 2
-            view.hud.showInfo("请先登录")
-            let loginVC = LoginViewController(isPresent: true)
-            let loginNav = UINavigationController(rootViewController: loginVC)
-            loginNav.navigationBar.barTintColor = Color_Theme
-            loginNav.navigationBar.tintColor = .white
-            loginNav.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-            present(loginNav, animated: true, completion: nil)
-        }
-    }
-    
-    @IBAction func favorBarAction(_ sender: UIBarButtonItem) {
-        view.hud.delay = 2
-        if UserInfoModel.shared.account.count > 0 {
-            guard var currentModel = currentImgModel else { return }
-            if currentModel.isFavor == true {
-                requestFavor(imgModel: &currentModel, status: false)
-            } else {
-                requestFavor(imgModel: &currentModel, status: true)
-            }
-        } else {
             view.hud.showInfo("请先登录")
             let loginVC = LoginViewController(isPresent: true)
             let loginNav = UINavigationController(rootViewController: loginVC)
@@ -435,12 +527,12 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
                             view.hud.showSuccess("收藏成功!")
                             currentImgModel?.isFavor = true
                             dataArr[scrollIndex].isFavor = true
-                            favorBarBtnItem.image = UIImage(systemName: "suit.heart.fill")
+                            favorBtn.setBackgroundImage(UIImage(named: "favor_s"), for: .normal)
                         } else {
                             view.hud.showSuccess("已取消收藏!")
                             currentImgModel?.isFavor = false
                             dataArr[scrollIndex].isFavor = false
-                            favorBarBtnItem.image = UIImage(systemName: "suit.heart")
+                            favorBtn.setBackgroundImage(UIImage(named: "favor_n"), for: .normal)
                         }
                     } else {
                         view.hud.showError("请求失败!")
@@ -449,16 +541,15 @@ class HomeViewController: BaseProjController, UIScrollViewDelegate {
             }
         }
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    // MARK: - 保存图片到相册
+    @objc func imageSavedToPhotosAlbum(image: UIImage, didFinishSabingWithError: Error?, contentInfo: AnyObject) {
+        view.hud.delay = 2
+        if didFinishSabingWithError == nil {
+            view.hud.showSuccess("保存成功!")
+        } else {
+            view.hud.showError("保存失败!")
+        }
     }
-    */
 
 }
 
