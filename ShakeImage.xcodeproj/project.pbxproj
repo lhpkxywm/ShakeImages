@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		6952F41D2C90B90EA485048D /* libPods-ShakeImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BAADD28991D72849D1682A8 /* libPods-ShakeImage.a */; };
-		9A047ABC27D0819D00AC90C1 /* QiNiuTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A047ABB27D0819D00AC90C1 /* QiNiuTools.swift */; };
 		9A047ABF27D0AE9100AC90C1 /* GenToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A047ABE27D0AE9100AC90C1 /* GenToken.m */; };
 		9A10D7AA264D06E0000A6190 /* AppleLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A10D7A9264D06E0000A6190 /* AppleLoginManager.swift */; };
 		9A363BFA26271B0C00B4AFD5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A363BF926271B0C00B4AFD5 /* AppDelegate.swift */; };
@@ -223,7 +222,6 @@
 		18B597FCB8D9CC644E34908D /* Pods-ShakeImage.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShakeImage.release.xcconfig"; path = "Target Support Files/Pods-ShakeImage/Pods-ShakeImage.release.xcconfig"; sourceTree = "<group>"; };
 		59043986C454942D08197926 /* Pods-ShakeImage.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShakeImage.debug.xcconfig"; path = "Target Support Files/Pods-ShakeImage/Pods-ShakeImage.debug.xcconfig"; sourceTree = "<group>"; };
 		5BAADD28991D72849D1682A8 /* libPods-ShakeImage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ShakeImage.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9A047ABB27D0819D00AC90C1 /* QiNiuTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiNiuTools.swift; sourceTree = "<group>"; };
 		9A047ABD27D0AE9100AC90C1 /* GenToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenToken.h; sourceTree = "<group>"; };
 		9A047ABE27D0AE9100AC90C1 /* GenToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenToken.m; sourceTree = "<group>"; };
 		9A10D7A8264D0682000A6190 /* ShakeImage.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShakeImage.entitlements; sourceTree = "<group>"; };
@@ -621,7 +619,6 @@
 				9AEDFA3026392C6A006B0EAE /* Extension.swift */,
 				9A3C6EA5263BF6D200407036 /* ShakeImage-Bridging-Header.h */,
 				9A10D7A9264D06E0000A6190 /* AppleLoginManager.swift */,
-				9A047ABB27D0819D00AC90C1 /* QiNiuTools.swift */,
 				9A604B342977C6850064F625 /* NetworkTool.swift */,
 				9A604B362977D77A0064F625 /* AesTool.swift */,
 			);
@@ -1346,7 +1343,6 @@
 				9A363BFC26271B0C00B4AFD5 /* SceneDelegate.swift in Sources */,
 				9AEDFA8926395675006B0EAE /* ModelType.swift in Sources */,
 				9AEDF9A72639072E006B0EAE /* TGFlowLayout.swift in Sources */,
-				9A047ABC27D0819D00AC90C1 /* QiNiuTools.swift in Sources */,
 				9AEDFA2C26392717006B0EAE /* Result.swift in Sources */,
 				9AEDFA9626395675006B0EAE /* Logger.swift in Sources */,
 				9AEDFA2126392717006B0EAE /* NSTextAttachment+Kingfisher.swift in Sources */,
